@@ -13,7 +13,7 @@ export const getstripesession = async ({priceid , domainurl , customerid} : {
         mode:"subscription" ,
         billing_address_collection : "auto",
         line_items :[{price:priceid,quantity:1}],
-        payment_method_types:['card' ,"amazon_pay" ,'paypal' , "us_bank_account" ,'alipay'],
+        payment_method_types:['card'],
         customer_update :{
             address:"auto",
             name:"auto"
