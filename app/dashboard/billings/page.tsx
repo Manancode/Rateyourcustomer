@@ -62,7 +62,7 @@ async function createsubscription(){
 
 const subscriptionurl = await getstripesession({
   customerid : dbuser.stripeCustomerid,
-  domainurl : "http://localhost:3000",
+  domainurl : process.env.NODE_ENV=="production" ? process.env.PRODUCTION_URL as string : "http://localhost:3000",
   priceid : process.env.STRIPE_PRICE_ID as string,
 
   
@@ -76,7 +76,7 @@ async function createcustomerportal() {
   "use server"
   const session = await stripe.billingPortal.sessions.create({
     customer : data?.user.stripeCustomerid as string ,
-    return_url : "http://localhost:3000/dashboard"
+    return_url : process.env.NODE_ENV=="production" ? process.env.PRODUCTION_URL as string :"http://localhost:3000/dashboard"
   })
 
   return redirect(session.url)
