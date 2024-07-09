@@ -1,4 +1,5 @@
-import Submitbutton from '@/app/components/submitbuttons'
+
+import { Submitbutton } from '@/app/components/submitbuttons'
 import prisma from '@/app/lib/db'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
