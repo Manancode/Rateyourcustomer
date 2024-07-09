@@ -1,16 +1,18 @@
 
 import { Submitbutton } from '@/app/components/submitbuttons'
 import prisma from '@/app/lib/db'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { unstable_noStore as noStore} from 'next/cache'
 import React from 'react'
 
 
+
 async function getdata(userid : string){
+    noStore()
   if(!userid){
     const data = await prisma.user.findUnique({
         where :{

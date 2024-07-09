@@ -5,6 +5,7 @@ import { ThemeProvider } from "./components/theme-provider";
 import Navbar from "./components/navbar";
 
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

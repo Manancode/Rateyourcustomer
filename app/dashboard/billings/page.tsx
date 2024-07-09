@@ -7,6 +7,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { CheckCircle2 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import React from 'react'
+import { unstable_noStore as noStore} from 'next/cache'
 
 
 
@@ -19,6 +20,7 @@ const featureitems = [
 ]
 
 async function getdata(userid:string){
+  noStore()
   const data = await prisma.subscription.findUnique({
     where : {
       userid : userid , 
