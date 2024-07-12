@@ -1,10 +1,19 @@
 
-import Dashboardnav from '../components/dashboardnav'
+import SimpleTabs from '../components/tabs'
 
 function Dashboard() {
+    const tabs = [
+        { label: 'Overview', content: <div>Overview content</div> },
+        { label: 'Customer Insights', content: <div>Customer Insights content</div> },
+        { label: 'Activity Reports', content: <div>Activity Reports content</div> },
+        { label: 'Revenue Reports', content: <div>Revenue Reports content</div> },
+        { label: 'Settings', content: <div>Settings content</div> },
+    ];
 
 return(
- <div>helloji</div>
+    <div className="main-content">
+    <SimpleTabs tabs={tabs}/>
+</div>
 )
 
 }

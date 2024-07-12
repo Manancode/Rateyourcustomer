@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Usernav from "./usernav";
 
+
 export default async function Navbar() {
     const { isAuthenticated, getUser } = getKindeServerSession();
     const user = await getUser();
@@ -21,6 +22,7 @@ export default async function Navbar() {
                     
                     {(await isAuthenticated()) ? (
                         <>
+                            
                             <Link href="/dashboard/developer">
                                 <Button variant='link'>Developer</Button>
                             </Link>
