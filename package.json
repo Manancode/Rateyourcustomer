@@ -13,6 +13,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.3",
+    "@mui/lab": "^5.0.0-alpha.172",
     "@mui/material": "^5.16.1",
     "@prisma/client": "^5.16.1",
     "@radix-ui/react-avatar": "^1.1.0",
