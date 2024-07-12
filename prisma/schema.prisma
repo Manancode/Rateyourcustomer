@@ -21,6 +21,7 @@
     stripeCustomerid String? @unique
     colorscheme String @default("theme-blue")
     Subscription Subscription?
+    apikey String?
   }
 
   model Subscription {

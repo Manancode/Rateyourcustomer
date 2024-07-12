@@ -7,7 +7,7 @@ import React from 'react'
 
 
 export const navitems = [
-    {name : "Home" , href : "/dashboard" , icon : HomeIcon},
+    {name : "Dashboard" , href : "/dashboard" , icon : HomeIcon},
     {name : "Organization" , href : "/dashboard/organization", icon : Building}, 
     {name : "Billings" , href : "/dashboard/billings" , icon : CreditCard},
     {name : "Support" , href : "/dashboard/support" , icon : Headset}, 
