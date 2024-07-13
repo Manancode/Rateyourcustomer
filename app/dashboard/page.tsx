@@ -1,5 +1,6 @@
 
-import SimpleTabs from '../components/tabs'
+import LabTabs from '../components/tabs';
+
 
 function Dashboard() {
     const tabs = [
@@ -11,8 +12,9 @@ function Dashboard() {
     ];
 
 return(
+    
     <div className="main-content">
-    <SimpleTabs tabs={tabs}/>
+    <LabTabs tabs={tabs}/>
 </div>
 )
 
