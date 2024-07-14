@@ -19,9 +19,7 @@
     name String?
     email String @unique
     stripeCustomerid String? @unique
-    colorscheme String @default("theme-blue")
     Subscription Subscription?
-    apikey String?
   }
 
   model Subscription {
@@ -35,4 +33,5 @@
     updatedAt DateTime @updatedAt
     user User @relation(fields: [userid] , references: [id])
     userid String @unique  
+    apikey String?
   }
