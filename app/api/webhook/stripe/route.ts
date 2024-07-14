@@ -82,8 +82,8 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
     const subscription = await stripe.subscriptions.retrieve(
       invoice.subscription as string
     );
-
-    await prisma.subscription.update({
+   
+    await prisma.subscription.updateMany({
       where: {
         stripeSubscriptionid: subscription.id,
       },
@@ -92,9 +92,10 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
         currentperiodstart: subscription.current_period_start,
         currentperiodend: subscription.current_period_end,
         status: subscription.status ,
-         apikey : "secret_" + randomUUID()
+        apikey : "secret_" + randomUUID()
       }
     });
+    
 
     console.log("Subscription updated successfully for subscription ID:", subscription.id);
   } catch (error) {

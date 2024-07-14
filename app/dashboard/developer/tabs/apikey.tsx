@@ -6,6 +6,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 
 
 
+
 async function getdata(userid:string){
   noStore()
   const data = await prisma.subscription.findUnique({
@@ -14,6 +15,7 @@ async function getdata(userid:string){
     } ,
     select : {
       status : true , 
+      apikey : true , 
       user : {
         select : {
           stripeCustomerid : true , 
@@ -29,13 +31,12 @@ async function Apikeypage() {
   const { getUser } = getKindeServerSession()
   const user = await getUser()
   const data = await getdata(user?.id as string)
-  
 
 
   if (data?.status === "active"){
     return ( 
      <div className='grid items-start gap-8 '>
-      api key here
+      {data.apikey}
     </div>
     
      
