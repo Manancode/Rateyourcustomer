@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import prisma from '../../../utils/prismaClient';
-import { authenticate } from '../../../middlewares/authenticate';
+import { authenticate} from '@/app/middleware/authenticate';
+import prisma from '@/app/utils/prismaClient';
 
 // Middleware for authentication
 const authMiddleware = async (req) => {
