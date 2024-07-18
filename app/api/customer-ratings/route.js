@@ -1,6 +1,5 @@
-import prisma from '../..prismaClient.js';
-import { authenticate } from '../../middlewares/authenticate,js';
-
+import prisma from "@/app/utils/prismaClient";
+import { authenticate } from "@/app/middleware/authenticate";
 
 export default async function handler(req, res) {
   const authMiddleware = (req, res, next) => {
