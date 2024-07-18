@@ -1,4 +1,4 @@
-import prisma from '../utils/prismaClient.js';
+import prisma from '../..prismaClient.js';
 import { authenticate } from '../../middlewares/authenticate,js';
 
 
