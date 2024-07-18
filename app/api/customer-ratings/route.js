@@ -1,51 +1,45 @@
-import prisma from "@/app/utils/prismaClient";
-import { authenticate } from "@/app/middleware/authenticate";
+import { NextResponse } from 'next/server';
+import prisma from '../../../utils/prismaClient';
+import { authenticate } from '../../../middlewares/authenticate';
 
-export default async function handler(req, res) {
-  const authMiddleware = (req, res, next) => {
-    authenticate(req, res, next);
-  };
-
-  const runMiddleware = (req, res, fn) => {
-    return new Promise((resolve, reject) => {
-      fn(req, res, (result) => {
-        if (result instanceof Error) {
-          return reject(result);
-        }
-        return resolve(result);
-      });
-    });
-  };
-
-  await runMiddleware(req, res, authMiddleware);
-
-  switch (req.method) {
-    case 'GET':
-      await getRatings(req, res);
-      break;
-    case 'POST':
-      await createRating(req, res);
-      break;
-    default:
-      res.setHeader('Allow', ['GET', 'POST']);
-      res.status(405).end(`Method ${req.method} Not Allowed`);
+// Middleware for authentication
+const authMiddleware = async (req) => {
+  try {
+    await authenticate(req);
+    return true;
+  } catch (error) {
+    return false;
   }
-}
+};
 
-async function getRatings(req, res) {
+// Helper function to run middleware
+const runMiddleware = async (req, fn) => {
+  return new Promise((resolve, reject) => {
+    fn(req, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+      resolve();
+    });
+  });
+};
+
+// GET handler
+const getRatings = async (req) => {
   try {
     const ratings = await prisma.rating.findMany({
       where: { userId: req.user.id },
     });
-    res.status(200).json(ratings);
+    return NextResponse.json(ratings, { status: 200 });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch ratings' });
+    return NextResponse.json({ error: 'Failed to fetch ratings' }, { status: 500 });
   }
-}
+};
 
-async function createRating(req, res) {
+// POST handler
+const createRating = async (req) => {
   try {
-    const { rating, customerId } = req.body;
+    const { rating, customerId } = await req.json();
     const newRating = await prisma.rating.create({
       data: {
         rating,
@@ -53,8 +47,33 @@ async function createRating(req, res) {
         userId: req.user.id,
       },
     });
-    res.status(201).json(newRating);
+    return NextResponse.json(newRating, { status: 201 });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create rating' });
+    return NextResponse.json({ error: 'Failed to create rating' }, { status: 500 });
   }
+};
+
+// Main handler function for GET and POST requests
+export async function GET(req) {
+  const authenticated = await runMiddleware(req, authMiddleware);
+  if (!authenticated) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  return getRatings(req);
+}
+
+export async function POST(req) {
+  const authenticated = await runMiddleware(req, authMiddleware);
+  if (!authenticated) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  return createRating(req);
+}
+
+export async function PUT(req) {
+  return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
+}
+
+export async function DELETE(req) {
+  return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
 }
