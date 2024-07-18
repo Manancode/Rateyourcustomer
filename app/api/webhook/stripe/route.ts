@@ -6,7 +6,6 @@ import { randomUUID } from "crypto";
 
 export async function POST(req: Request) {
   const body = await req.text();
-
   const signature = headers().get("Stripe-Signature") as string;
 
   try {
@@ -14,7 +13,7 @@ export async function POST(req: Request) {
       body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET as string
-    );    
+    );
 
     const session = event.data.object as Stripe.Checkout.Session;
 
@@ -41,29 +40,65 @@ export async function POST(req: Request) {
           currentperiodstart: subscription.current_period_start,
           currentperiodend: subscription.current_period_end,
           status: subscription.status,
-          planid: subscription.items.data[0].plan.id,
+          planid: subscription.items.data[0].price.id,
           interval: String(subscription.items.data[0].plan.interval),
+          apikey: "secret_" + randomUUID(), // Generate API key on subscription creation
         },
       });
     }
 
     if (event.type === "invoice.payment_succeeded") {
-      const subscription = await stripe.subscriptions.retrieve(
-        session.subscription as string
-      );
+      const invoice = event.data.object as Stripe.Invoice;
+      const subscriptionId = invoice.subscription as string;
 
-      await prisma.subscription.update({
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+      const existingSubscription = await prisma.subscription.findUnique({
         where: {
           stripeSubscriptionid: subscription.id,
         },
-        data: {
-          planid: subscription.items.data[0].price.id,
-          currentperiodstart: subscription.current_period_start,
-          currentperiodend: subscription.current_period_end,
-          status: subscription.status,
-          apikey : "secret_" + randomUUID()
-        },
       });
+
+      if (!existingSubscription) {
+        // If the subscription does not exist, create it
+        const customerId = subscription.customer as string;
+        const user = await prisma.user.findUnique({
+          where: {
+            stripeCustomerid: customerId,
+          },
+        });
+
+        if (!user) {
+          throw new Error("User not found...");
+        }
+
+        await prisma.subscription.create({
+          data: {
+            stripeSubscriptionid: subscription.id,
+            userid: user.id,
+            currentperiodstart: subscription.current_period_start,
+            currentperiodend: subscription.current_period_end,
+            status: subscription.status,
+            planid: subscription.items.data[0].price.id,
+            interval: String(subscription.items.data[0].plan.interval),
+            apikey: "secret_" + randomUUID(), // Generate API key if creating the subscription
+          },
+        });
+      } else {
+        // If the subscription exists, update it
+        await prisma.subscription.update({
+          where: {
+            stripeSubscriptionid: subscription.id,
+          },
+          data: {
+            planid: subscription.items.data[0].price.id,
+            currentperiodstart: subscription.current_period_start,
+            currentperiodend: subscription.current_period_end,
+            status: subscription.status,
+            // Do not generate a new API key here
+          },
+        });
+      }
     }
 
     return new Response(null, { status: 200 });

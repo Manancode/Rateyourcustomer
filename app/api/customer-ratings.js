@@ -1,6 +1,6 @@
 import prisma from '../utils/prismaClient.js';
 import { authenticate } from '../../middlewares/authenticate,js';
-console.log("reached here")
+
 
 export default async function handler(req, res) {
   const authMiddleware = (req, res, next) => {

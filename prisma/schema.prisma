@@ -35,7 +35,7 @@
     updatedAt DateTime @updatedAt
     user User @relation(fields: [userid] , references: [id])
     userid String @unique 
-    apikey String?
+    apikey String @unique
     
   }
 
