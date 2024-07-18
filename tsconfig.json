@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/customer-rating.js", "app/controllers/ratingcontroller.js", "app/middleware/authenticate.js", "app/utils/prismaClient.js", "server.js", "app/routes/ratingroutes.js", "prisma/client.js", "app/prisma/client.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/customer-rating.js", "app/controllers/ratingcontroller.js", "app/middleware/authenticate.js", "app/utils/prismaClient.js", "server.js", "app/routes/ratingroutes.js", "prisma/client.js", "app/prisma/client.js", "app/api/customer-ratings/route.js"],
   "exclude": ["node_modules"]
 }
