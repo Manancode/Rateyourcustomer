@@ -1,4 +1,4 @@
-// src/routes/ratingRoutes.ts
+// only subscribed users can access getratings and createratings
 import { Router } from 'express';
 
 import { authenticate } from '../middleware/authenticate.js';
