@@ -1,8 +1,8 @@
-// src/server.ts
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import next from 'next';
-import router from './app/routes/ratingroutes.js';
+import router from './app/routes/commonroutes.js';
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });

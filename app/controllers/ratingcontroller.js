@@ -13,19 +13,23 @@ export async function getRatings(req, res) {
   }
 }
 
-
 export async function createRating(req, res) {
   try {
     const { customerId, categoryA, categoryB } = req.body;
     const authenticatedUserId = req.user.id;
 
-    // Checking if the customer exists and belongs to the authenticated user
+    // Checking if the customer exists
     const customer = await prisma.customer.findUnique({
       where: { id: customerId },
     });
 
-    if (!customer || customer.userId !== authenticatedUserId) {
-      return res.status(400).json({ error: 'Customer not found or does not belong to the authenticated user' });
+    if (!customer) {
+      return res.status(404).json({ error: 'Customer not found' });
+    }
+
+    // Checking if the customer belongs to the authenticated user
+    if (customer.userid !== authenticatedUserId) {
+      return res.status(403).json({ error: 'Customer does not belong to the authenticated user' });
     }
 
     // Creating the rating
@@ -37,7 +41,7 @@ export async function createRating(req, res) {
         userid: authenticatedUserId,
       },
     });
-    
+
     res.status(201).json(newRating);
   } catch (error) {
     console.error('Failed to create rating:', error);
