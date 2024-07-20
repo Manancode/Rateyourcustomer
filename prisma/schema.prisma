@@ -20,8 +20,12 @@
     email String @unique
     stripeCustomerid String? @unique
     Subscription Subscription? 
+    companyId String
+    company Company @relation(fields: [companyId] , references: [id])
     ratings Rating[]
     customer Customer[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
   }
 
@@ -39,23 +43,48 @@
     apikey String @unique
     
   }
+  
+  model Company {
+    id String @id @unique
+    name String
+    users User[]
+    customers Customer[]
+  }
 
   model Customer {
     id Int @id @default(autoincrement())
     name String
     email String @unique
+    companyId String
+    company Company @relation(fields: [companyId] , references: [id])
     user User @relation(fields: [userid] , references: [id])
     userid String
     ratings Rating[]
+    churnRate Float
+    upsellRate Float
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
   }
 
   model Rating{
     id Int @id @default(autoincrement())
+    paymentHistory Float
+    averageOrderValue Float
+    lifetimeValue      Float
+    purchaseFrequency  Float
+    supportTickets     Int
+    feedbackScores     Float 
+    returnRate         Float
+    referralRate       Float
+    contractLength     Int  
+    renewalRate        Float
+    overallScore       Float
     userid String 
     customerId Int
-    categoryA Int
-    categoryB Int
     customer Customer @relation(fields: [customerId] , references: [id])
     user User @relation(fields: [userid] , references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
   }
