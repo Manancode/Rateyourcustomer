@@ -4,31 +4,38 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import prisma from "../lib/db";
 import { stripe } from "../lib/stripe";
-import { unstable_noStore as noStore} from 'next/cache'
-
+import { unstable_noStore as noStore } from 'next/cache';
+import { v4 as uuidv4 } from 'uuid';
 
 async function getdata({ email, id, firstname, lastname, profileimage }: { email: string, id: string, firstname: string | undefined | null, lastname: string | undefined | null, profileimage: string | undefined | null }) {
-noStore()
+  noStore();
+
   let user = await prisma.user.findUnique({
     where: { id: id },
-    select: { id: true, stripeCustomerid: true },
+    select: { id: true, stripeCustomerid: true, companyId: true },
   });
 
   if (!user) {
-    // Check if a user with the same email already exists
     const existingUser = await prisma.user.findUnique({ where: { email: email } });
 
     if (!existingUser) {
       const name = `${firstname ?? ''} ${lastname ?? ''}`;
+      const companyId = uuidv4(); // Generating a random ID for the company
+
       user = await prisma.user.create({
         data: {
           id: id,
           email: email,
           name: name,
+          company: {
+            create: {
+              id: companyId,
+              name: "have to company name here" 
+            }
+          }
         },
       });
     } else {
-      // If user with the same email exists, use this user
       user = existingUser;
     }
   }
