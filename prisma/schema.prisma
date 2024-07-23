@@ -21,6 +21,7 @@
     stripeCustomerid String? @unique
     Subscription Subscription? 
     companyId String
+ 
     company Company @relation(fields: [companyId] , references: [id])
     ratings Rating[]
     customer Customer[]
@@ -34,8 +35,8 @@
     interval String
     status String
     planid String
-    companyId String @unique
-    company Company @relation(fields: [companyId] , references: [id]) 
+    
+     
     currentperiodstart Int
     currentperiodend Int
     createdAt DateTime @default(now())
@@ -50,7 +51,7 @@
     id String @id @unique
     name String
     users User[]
-    subscription Subscription?
+
     customers Customer[]
     webhook Webhook[]
   }

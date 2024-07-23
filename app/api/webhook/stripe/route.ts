@@ -40,7 +40,7 @@ export async function POST(req: Request) {
           planid: subscription.items.data[0].price.id,
           interval: String(subscription.items.data[0].plan.interval),
           apikey: "secret_" + randomUUID(), 
-          companyId: user.companyId, 
+         
         },
       });
     } else if (event.type === "invoice.payment_succeeded") {
@@ -74,7 +74,7 @@ export async function POST(req: Request) {
             planid: subscription.items.data[0].price.id,
             interval: String(subscription.items.data[0].plan.interval),
             apikey: "secret_" + randomUUID(), 
-            companyId: user.companyId, 
+            // companyId: user.companyId, 
           },
         });
       } else {
