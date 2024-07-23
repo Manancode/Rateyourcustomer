@@ -34,6 +34,8 @@
     interval String
     status String
     planid String
+    companyId String @unique
+    company Company @relation(fields: [companyId] , references: [id]) 
     currentperiodstart Int
     currentperiodend Int
     createdAt DateTime @default(now())
@@ -48,7 +50,9 @@
     id String @id @unique
     name String
     users User[]
+    subscription Subscription?
     customers Customer[]
+    webhook Webhook[]
   }
 
   model Customer {
@@ -88,3 +92,14 @@
     updatedAt DateTime @updatedAt
 
   }
+
+
+  model Webhook {
+  id         String   @id @default(uuid())
+  url        String
+  events     String[]
+  companyId  String
+  company    Company  @relation(fields: [companyId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

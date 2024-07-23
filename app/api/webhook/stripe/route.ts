@@ -15,24 +15,21 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
 
-    const session = event.data.object as Stripe.Checkout.Session;
-
     if (event.type === "checkout.session.completed") {
-      const subscription = await stripe.subscriptions.retrieve(
-        session.subscription as string
-      );
+      const session = event.data.object as Stripe.Checkout.Session;
+      const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
       const customerId = String(session.customer);
 
+      // Find the user based on the Stripe customer ID
       const user = await prisma.user.findUnique({
-        where: {
-          stripeCustomerid: customerId,
-        },
+        where: { stripeCustomerid: customerId },
       });
 
       if (!user) {
         throw new Error("User not found...");
       }
 
+      // Create the subscription in the database
       await prisma.subscription.create({
         data: {
           stripeSubscriptionid: subscription.id,
@@ -42,30 +39,25 @@ export async function POST(req: Request) {
           status: subscription.status,
           planid: subscription.items.data[0].price.id,
           interval: String(subscription.items.data[0].plan.interval),
-          apikey: "secret_" + randomUUID(), // Generate API key on subscription creation
+          apikey: "secret_" + randomUUID(), 
+          companyId: user.companyId, 
         },
       });
-    }
-
-    if (event.type === "invoice.payment_succeeded") {
+    } else if (event.type === "invoice.payment_succeeded") {
       const invoice = event.data.object as Stripe.Invoice;
       const subscriptionId = invoice.subscription as string;
 
+      // Retrieve the subscription from Stripe
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-
       const existingSubscription = await prisma.subscription.findUnique({
-        where: {
-          stripeSubscriptionid: subscription.id,
-        },
+        where: { stripeSubscriptionid: subscription.id },
       });
 
       if (!existingSubscription) {
         // If the subscription does not exist, create it
         const customerId = subscription.customer as string;
         const user = await prisma.user.findUnique({
-          where: {
-            stripeCustomerid: customerId,
-          },
+          where: { stripeCustomerid: customerId },
         });
 
         if (!user) {
@@ -81,20 +73,20 @@ export async function POST(req: Request) {
             status: subscription.status,
             planid: subscription.items.data[0].price.id,
             interval: String(subscription.items.data[0].plan.interval),
-            apikey: "secret_" + randomUUID(), // Generate API key if creating the subscription
+            apikey: "secret_" + randomUUID(), 
+            companyId: user.companyId, 
           },
         });
       } else {
-        // If the subscription exists, update it
+        
         await prisma.subscription.update({
-          where: {
-            stripeSubscriptionid: subscription.id,
-          },
+          where: { stripeSubscriptionid: subscription.id },
           data: {
-            planid: subscription.items.data[0].price.id,
             currentperiodstart: subscription.current_period_start,
             currentperiodend: subscription.current_period_end,
             status: subscription.status,
+            planid: subscription.items.data[0].price.id,
+            interval: String(subscription.items.data[0].plan.interval),
             // Do not generate a new API key here
           },
         });
@@ -103,7 +95,7 @@ export async function POST(req: Request) {
 
     return new Response(null, { status: 200 });
   } catch (error: unknown) {
-    console.error(error);
-    return new Response("webhook error", { status: 400 });
+    console.error("Webhook error:", error);
+    return new Response("Webhook error", { status: 400 });
   }
 }
