@@ -4,10 +4,7 @@ import { createCustomers, getCustomers } from '../controllers/customercontroller
 import { authenticate } from '../middleware/authenticate.js';
 import { createRating, getRatings } from '../controllers/ratingcontroller.js';
 import { createWebhook } from '../controllers/webhookcontroller.js';
-
-
-
-
+import { createDefaultRatingCategories, updateRatingCategoryWeightage } from '../controllers/ratingCategoryController.js';
 
 const router = Router();
 
@@ -16,4 +13,6 @@ router.post('/customer-ratings', authenticate, createRating);
 router.get('/customer', authenticate, getCustomers);
 router.post('/customer', authenticate, createCustomers);
 router.post('/create-webhook', authenticate, createWebhook);
+router.post('/rating-categories', authenticate, createDefaultRatingCategories);
+router.put('/rating-categories/weightage', authenticate, updateRatingCategoryWeightage);
 export default router;

@@ -1,8 +1,4 @@
-  // This is your Prisma schema file,
-  // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-  // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-  // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+  
 
   generator client {
     provider = "prisma-client-js"
@@ -21,7 +17,6 @@
     stripeCustomerid String? @unique
     Subscription Subscription[]
     companyId String
- 
     company Company @relation(fields: [companyId] , references: [id])
     ratings Rating[]
     customer Customer[]
@@ -35,8 +30,6 @@
     interval String
     status String
     planid String
-    
-     
     currentperiodstart Int
     currentperiodend Int
     createdAt DateTime @default(now())
@@ -51,8 +44,8 @@
     id String @id @default(uuid())
     name String
     users User[]
-
     customers Customer[]
+    ratingCategory RatingCategory[]
     webhook Webhook[]
   }
 
@@ -72,27 +65,143 @@
 
   }
 
-  model Rating{
-    id Int @id @default(autoincrement())
-    paymentHistory Float
-    averageOrderValue Float
-    lifetimeValue      Float
-    purchaseFrequency  Float
-    supportTickets     Int
-    feedbackScores     Float 
-    returnRate         Float
-    referralRate       Float
-    contractLength     Int  
-    renewalRate        Float
-    overallScore       Float
-    userid String 
-    customerId Int
-    customer Customer @relation(fields: [customerId] , references: [id])
-    user User @relation(fields: [userid] , references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
 
-  }
+model Rating {
+  id Int @id @default(autoincrement())
+  value Float
+  category RatingCategory @relation(fields: [categoryId], references: [id])
+  categoryId String
+  period RatingPeriod @relation(fields: [periodId], references: [id])
+  periodId String
+  userid String
+  customerId Int
+  customer Customer @relation(fields: [customerId], references: [id])
+  user User @relation(fields: [userid], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// New models
+model RatingCategory {
+  id String @id @default(uuid())
+  name String
+  description String?
+  weightage Float
+  company Company @relation(fields: [companyId], references: [id])
+  companyId String
+  ratings Rating[]
+}
+
+model RatingPeriod {
+  id String @id @default(uuid())
+  startDate DateTime
+  endDate DateTime
+  ratings Rating[]
+}
+
+model PaymentHistory {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  timelyPayments Int
+  latePayments   Int
+  totalAmount   Float
+  paymentDates  DateTime[]
+  userid        String
+  createdAt     DateTime @default(now())
+}
+
+model AverageOrderValue {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  totalAmount   Float
+  orderCount    Int
+  orderDates    DateTime[]
+  userid        String
+  createdAt     DateTime @default(now())
+}
+
+model LifetimeValue {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  totalRevenue  Float
+  startDate     DateTime
+  endDate       DateTime?
+  userid        String
+  createdAt     DateTime @default(now())
+}
+
+model PurchaseFrequency {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  numberOfPurchases Int
+  purchaseDates DateTime[]
+  frequency     String // e.g., weekly, monthly
+  userid        String
+  createdAt     DateTime @default(now())
+}
+
+model SupportTickets {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  numberOfTickets Int
+  resolutionTime Float
+  ticketCategories String[]
+  ticketDates   DateTime[]
+  userid        String
+  createdAt     DateTime @default(now())
+}
+
+model FeedbackScores {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  feedbackScore Float
+  feedbackDate  DateTime
+  feedbackType  String 
+  userid        String
+  createdAt     DateTime @default(now())
+}
+
+model ReturnRate {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  numberOfReturns Int
+  totalOrders   Int
+  returnDates   DateTime[]
+  userid        String
+  createdAt     DateTime @default(now())
+}
+
+model ReferralRate {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  numberOfReferrals Int
+  referralDetails String[]
+  referralDates DateTime[]
+  userid        String
+  createdAt     DateTime @default(now())
+}
+
+model ContractLength {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  startDate     DateTime
+  endDate       DateTime
+  contractDetails String
+  userid        String
+  createdAt     DateTime @default(now())
+}
+
+model RenewalRate {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  numberOfRenewals Int
+  renewalDates  DateTime[]
+  contractDetails String
+  userid        String
+  createdAt     DateTime @default(now())
+}
+
+
 
 
   model Webhook {
@@ -104,5 +213,7 @@
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
+
+
 
 
