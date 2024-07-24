@@ -19,7 +19,7 @@
     name String?
     email String @unique
     stripeCustomerid String? @unique
-    Subscription Subscription? 
+    Subscription Subscription[]
     companyId String
  
     company Company @relation(fields: [companyId] , references: [id])
@@ -48,7 +48,7 @@
   }
   
   model Company {
-    id String @id @unique
+    id String @id @default(uuid())
     name String
     users User[]
 
@@ -97,10 +97,12 @@
 
   model Webhook {
   id         String   @id @default(uuid())
-  url        String
+  url        String @unique
   events     String[]
   companyId  String
   company    Company  @relation(fields: [companyId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
+
+
