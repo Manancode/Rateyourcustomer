@@ -58,8 +58,7 @@
     user User @relation(fields: [userid] , references: [id])
     userid String
     ratings Rating[]
-    churnRate Float
-    upsellRate Float
+    paymentHistories PaymentHistory[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -107,6 +106,7 @@ model PaymentHistory {
   totalAmount   Float
   paymentDates  DateTime[]
   userid        String
+  customer Customer @relation(fields: [customerId] , references: [id])
   createdAt     DateTime @default(now())
 }
 
