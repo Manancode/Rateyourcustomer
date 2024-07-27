@@ -10,20 +10,60 @@
     directUrl = env("DIRECT_URL")
   }
 
-  model User {
-    id String @id @unique
-    name String?
-    email String @unique
-    stripeCustomerid String? @unique
-    Subscription Subscription[]
-    companyId String
-    company Company @relation(fields: [companyId] , references: [id])
-    ratings Rating[]
-    customer Customer[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model User {
+  id               String               @id @unique
+  name             String?
+  email            String               @unique
+  stripeCustomerid String?              @unique
+  Subscription     Subscription[]
+  companyId        String
+  company          Company              @relation(fields: [companyId], references: [id])
+  ratings          Rating[]
+  customers        Customer[]
+  productUsages        ProductUsage[]
+  purchaseFrequencies  PurchaseFrequency[]
+  renewalRates         RenewalRate[]
+  returnRates          ReturnRate[]
+  upsellOpportunities  UpsellOpportunity[]
+  accountHealth        AccountHealth[]
+  contractLength ContractLength[]
+  customerEngagement CustomerEngagement[]
+  feedbackScores FeedbackScores[]
+  customerSuccess CustomerSuccess[]
+  lifetimeValue LifetimeValue[]
+  averageOrderValue AverageOrderValue[]
+  dataSync DataSync[]
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+}
 
-  }
+
+model Customer {
+  id               Int                  @id @default(autoincrement())
+  name             String
+  email            String               @unique
+  companyId        String
+  company          Company              @relation(fields: [companyId], references: [id])
+  userId           String
+  user             User                 @relation(fields: [userId], references: [id])
+  ratings          Rating[]
+  paymentHistories PaymentHistory[]
+  productUsages        ProductUsage[]
+  purchaseFrequencies  PurchaseFrequency[]
+  renewalRates         RenewalRate[]
+  returnRates          ReturnRate[]
+  upsellOpportunities  UpsellOpportunity[]
+  accountHealth        AccountHealth[]
+  contractLength ContractLength[]
+  customerEngagement CustomerEngagement[]
+  feedbackScores FeedbackScores[]
+  customerSuccess CustomerSuccess[]
+  lifetimeValue LifetimeValue[]
+  averageOrderValue AverageOrderValue[]
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+}
+
 
   model Subscription {
     stripeSubscriptionid String @id @unique
@@ -47,21 +87,6 @@
     customers Customer[]
     ratingCategory RatingCategory[]
     webhook Webhook[]
-  }
-
-  model Customer {
-    id Int @id @default(autoincrement())
-    name String
-    email String @unique
-    companyId String
-    company Company @relation(fields: [companyId] , references: [id])
-    user User @relation(fields: [userid] , references: [id])
-    userid String
-    ratings Rating[]
-    paymentHistories PaymentHistory[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
   }
 
 
@@ -110,35 +135,8 @@ model PaymentHistory {
   createdAt     DateTime @default(now())
 }
 
-model AverageOrderValue {
-  id            Int      @id @default(autoincrement())
-  customerId    Int
-  totalAmount   Float
-  orderCount    Int
-  orderDates    DateTime[]
-  userid        String
-  createdAt     DateTime @default(now())
-}
 
-model LifetimeValue {
-  id            Int      @id @default(autoincrement())
-  customerId    Int
-  totalRevenue  Float
-  startDate     DateTime
-  endDate       DateTime?
-  userid        String
-  createdAt     DateTime @default(now())
-}
 
-model PurchaseFrequency {
-  id            Int      @id @default(autoincrement())
-  customerId    Int
-  numberOfPurchases Int
-  purchaseDates DateTime[]
-  frequency     String // e.g., weekly, monthly
-  userid        String
-  createdAt     DateTime @default(now())
-}
 
 model SupportTickets {
   id            Int      @id @default(autoincrement())
@@ -151,25 +149,6 @@ model SupportTickets {
   createdAt     DateTime @default(now())
 }
 
-model FeedbackScores {
-  id            Int      @id @default(autoincrement())
-  customerId    Int
-  feedbackScore Float
-  feedbackDate  DateTime
-  feedbackType  String 
-  userid        String
-  createdAt     DateTime @default(now())
-}
-
-model ReturnRate {
-  id            Int      @id @default(autoincrement())
-  customerId    Int
-  numberOfReturns Int
-  totalOrders   Int
-  returnDates   DateTime[]
-  userid        String
-  createdAt     DateTime @default(now())
-}
 
 model ReferralRate {
   id            Int      @id @default(autoincrement())
@@ -181,30 +160,174 @@ model ReferralRate {
   createdAt     DateTime @default(now())
 }
 
+
+model AccountHealth {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  healthScore   Float
+  status        String   // e.g., "Good", "At Risk", "Critical"
+  details       Json     // Additional information about account health
+  createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
 model ContractLength {
   id            Int      @id @default(autoincrement())
   customerId    Int
   startDate     DateTime
   endDate       DateTime
-  contractDetails String
-  userid        String
+  contractDetails String // Details of the contract
+  renewalStatus  String  // e.g., "Renewed", "Expired"
   createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model CustomerEngagement {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  engagementScore Float  // Score representing engagement level
+  lastEngaged   DateTime // Last date of engagement
+  details       Json     // Additional details on engagement
+  createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model CustomerSuccess {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  successScore  Float    // Score indicating customer success
+  milestone     String   // Description of success milestone
+  achievedAt    DateTime // Date when the milestone was achieved
+  details       Json     // Additional details about success
+  createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model FeedbackScores {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  feedbackScore Float    // Numerical score of the feedback
+  feedbackDate  DateTime // Date when feedback was given
+  feedbackType  String   // Type of feedback (e.g., "Service", "Product")
+  details       Json     // Additional details about feedback
+  createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model DataSync {
+  id            Int      @id @default(autoincrement())
+  syncType      String   // Type of data sync (e.g., "Manual", "Scheduled")
+  status        String   // Status of the sync (e.g., "Completed", "Failed")
+  details       Json     // Details of the sync operation
+  syncDate      DateTime @default(now()) // Date when sync occurred
+  createdAt     DateTime @default(now())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model LifetimeValue {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  totalRevenue  Float    // Total revenue from the customer
+  startDate     DateTime // Start date of lifetime value tracking
+  endDate       DateTime? // End date of lifetime value tracking (optional)
+  details       Json     // Additional details about lifetime value
+  createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model AverageOrderValue {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  totalAmount   Float    // Total amount spent by the customer
+  orderCount    Int      // Number of orders made by the customer
+  averageValue  Float    // Average order value
+  orderDates    DateTime[]
+  createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model ProductUsage {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  usageCount    Int      // Number of times the product was used
+  lastUsed      DateTime // Last time the product was used
+  usageDetails  Json     // Additional details about product usage
+  createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model PurchaseFrequency {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  numberOfPurchases Int  // Number of purchases made
+  purchaseDates DateTime[] // Dates of each purchase
+  frequency     String   // e.g., weekly, monthly
+  createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
 }
 
 model RenewalRate {
   id            Int      @id @default(autoincrement())
   customerId    Int
-  numberOfRenewals Int
-  renewalDates  DateTime[]
-  contractDetails String
-  userid        String
+  numberOfRenewals Int   // Number of times the contract was renewed
+  renewalDates  DateTime[] // Dates of each renewal
+  renewalDetails Json    // Additional details about renewals
   createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model ReturnRate {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  numberOfReturns Int    // Number of returns
+  totalOrders   Int      // Total number of orders
+  returnDates   DateTime[] // Dates of returns
+  returnDetails Json     // Additional details about returns
+  createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+
+model UpsellOpportunity {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  potentialRevenue Float // Potential revenue from upsell
+  productSuggested String // Product suggested for upsell
+  opportunityDetails Json // Additional details about upsell opportunity
+  createdAt     DateTime @default(now())
+  userId        String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
 }
 
 
 
 
-  model Webhook {
+
+model Webhook {
   id         String   @id @default(uuid())
   url        String @unique
   events     String[]

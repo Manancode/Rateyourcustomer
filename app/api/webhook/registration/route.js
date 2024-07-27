@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { authenticate } from '@/app/middleware/authenticate';
-import { createWebhook } from '@/app/controllers/webhookcontroller';
+import { createWebhook } from '@/app/controllers/create-webhook';
 
 async function runMiddleware(req, res, fn) {
   return new Promise((resolve, reject) => {

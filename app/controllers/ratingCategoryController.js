@@ -1,4 +1,4 @@
-import prisma from '../utils/prismaClient.js';
+import prisma from "../utils/prismaClient.js";
 
 // Function to create default rating categories
 export async function createDefaultRatingCategories(req, res) {
@@ -14,6 +14,11 @@ export async function createDefaultRatingCategories(req, res) {
     { name: 'Referral Rate', weightage: 0.05 },
     { name: 'Contract Length', weightage: 0.025 },
     { name: 'Renewal Rate', weightage: 0.025 },
+    { name: 'Product Usage', weightage: 0.05 },
+    { name: 'Upsell/Cross-sell Success', weightage: 0.05 },
+    { name: 'Customer Engagement', weightage: 0.05 },
+    { name: 'Compliance/Risk Score', weightage: 0.05 },
+    { name: 'Market Influence', weightage: 0.05 },
   ];
 
   try {
@@ -26,12 +31,13 @@ export async function createDefaultRatingCategories(req, res) {
         },
       });
     }
-    return res.status(201).json({ message: 'Rating categories created' });
+    res.status(200).json({ message: 'Default rating categories created successfully' });
   } catch (error) {
-    console.error('Error creating rating categories:', error);
-    return res.status(500).json({ error: 'Failed to create rating categories' });
+    console.error('Error creating default rating categories:', error);
+    res.status(500).json({ error: 'Failed to create default rating categories' });
   }
 }
+
 
 // Function to update rating category weightage
 export async function updateRatingCategoryWeightage(req, res) {

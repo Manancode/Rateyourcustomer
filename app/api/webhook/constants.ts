@@ -15,3 +15,10 @@ export const WEBHOOK_EVENTS = {
     SUBSCRIPTION_UPDATED: 'subscription.updated',
     SUBSCRIPTION_CANCELLED: 'subscription.cancelled',
   };
+
+
+  export const ERROR_MESSAGES = {
+    WEBHOOK_ALREADY_EXISTS: 'Webhook URL already exists',
+    WEBHOOK_BELONGS_TO_OTHER_USER: 'Webhook does not belong to the authenticated user',
+    FAILED_TO_REGISTER_WEBHOOK: 'Failed to register webhook'
+  };
