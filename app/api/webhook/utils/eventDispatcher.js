@@ -1,5 +1,6 @@
 import axios from 'axios';
-import prisma from './prismaClient.js';
+import prisma from '../../../utils/prismaClient.js';
+
 
 export async function dispatchEvent(eventType, payload) {
   try {

@@ -1,5 +1,6 @@
-import prisma from "../../utils/prismaClient.js";
+import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
+
 
 export async function purchase_frequency_changed(payload, userId) {
   const { customerId, newFrequency, updatedDate } = payload;

@@ -1,7 +1,8 @@
-import * as eventHandlers from './eventHandlers/index.js';
+
+import * as eventHandler from './eventhandler/index.js';
 
 export async function processEvent(eventType, payload, userId) {
-  const handler = eventHandlers[eventType];
+  const handler = eventHandler[eventType];
   if (!handler) {
     throw new Error(`No handler found for event type: ${eventType}`);
   }

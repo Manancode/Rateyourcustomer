@@ -1,14 +1,15 @@
-import prisma from "../../utils/prismaClient.js";
+import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
-export async function account_health_score_updated(payload, userId) {
+
+export async function account_health_updated(payload, userId) {
   const { customerId, healthScore } = payload;
   await prisma.accountHealth.upsert({
     where: { customerId },
     update: { healthScore },
     create: { customerId, healthScore, userId },
   });
-  await dispatchEvent('account_health_score_updated', payload);
+  await dispatchEvent('account_health_updated', payload);
 }
 
 export async function account_at_risk(payload, userId) {

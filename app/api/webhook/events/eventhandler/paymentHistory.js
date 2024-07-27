@@ -1,5 +1,5 @@
-import prisma from "../../utils/prismaClient.js";
-import { dispatchEvent } from "../../api/webhook/utils/eventDispatcher.js";
+import prisma from "../../../../utils/prismaClient.js";
+import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
 export async function payment_received(payload, userId) {
   const { customerId, amount, paymentDate } = payload;

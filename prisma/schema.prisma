@@ -20,19 +20,21 @@ model User {
   company          Company              @relation(fields: [companyId], references: [id])
   ratings          Rating[]
   customers        Customer[]
+  orderValue         OrderValue[]
   productUsages        ProductUsage[]
   purchaseFrequencies  PurchaseFrequency[]
   renewalRates         RenewalRate[]
   returnRates          ReturnRate[]
   upsellOpportunities  UpsellOpportunity[]
   accountHealth        AccountHealth[]
-  contractLength ContractLength[]
-  customerEngagement CustomerEngagement[]
-  feedbackScores FeedbackScores[]
-  customerSuccess CustomerSuccess[]
-  lifetimeValue LifetimeValue[]
-  averageOrderValue AverageOrderValue[]
-  dataSync DataSync[]
+  contractLength       Contract[]
+  customerEngagement   CustomerEngagement[]
+  feedbackScores       FeedbackScores[]
+  customerSuccess       CustomerSuccess[]
+  lifetimeValue        LifetimeValue[]
+  averageOrderValue    AverageOrderValue[]
+  dataSync             DataSync[]
+  supporTicket         SupportTicket[]
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
 }
@@ -48,18 +50,20 @@ model Customer {
   user             User                 @relation(fields: [userId], references: [id])
   ratings          Rating[]
   paymentHistories PaymentHistory[]
+  orderValue         OrderValue[]
   productUsages        ProductUsage[]
   purchaseFrequencies  PurchaseFrequency[]
   renewalRates         RenewalRate[]
   returnRates          ReturnRate[]
   upsellOpportunities  UpsellOpportunity[]
   accountHealth        AccountHealth[]
-  contractLength ContractLength[]
+  contractLength Contract[]
   customerEngagement CustomerEngagement[]
   feedbackScores FeedbackScores[]
   customerSuccess CustomerSuccess[]
   lifetimeValue LifetimeValue[]
   averageOrderValue AverageOrderValue[]
+  supportTicket SupportTicket[]
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
 }
@@ -135,19 +139,37 @@ model PaymentHistory {
   createdAt     DateTime @default(now())
 }
 
-
-
-
-model SupportTickets {
-  id            Int      @id @default(autoincrement())
-  customerId    Int
-  numberOfTickets Int
-  resolutionTime Float
-  ticketCategories String[]
-  ticketDates   DateTime[]
-  userid        String
-  createdAt     DateTime @default(now())
+model OrderValue {
+  id           Int      @id @default(autoincrement())
+  customerId   Int
+  orderValue   Float
+  orderDate    DateTime
+  updateDate   DateTime?
+  cancelDate   DateTime?
+  status       String   // e.g., 'placed', 'updated', 'cancelled'
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  customer     Customer @relation(fields: [customerId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
 }
+
+
+
+
+model SupportTicket {
+  id                Int      @id @default(autoincrement())
+  customerId        Int
+  ticketId          String   @unique
+  createdAt         DateTime @default(now())
+  resolvedAt        DateTime?
+  satisfactionScore Float?
+  lastUpdate        DateTime?
+  userId            String
+  customer Customer @relation(fields: [customerId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
 
 
 model ReferralRate {
@@ -173,15 +195,17 @@ model AccountHealth {
   user          User     @relation(fields: [userId], references: [id])
 }
 
-model ContractLength {
-  id            Int      @id @default(autoincrement())
-  customerId    Int
-  startDate     DateTime
-  endDate       DateTime
-  contractDetails String // Details of the contract
-  renewalStatus  String  // e.g., "Renewed", "Expired"
-  createdAt     DateTime @default(now())
-  userId        String
+model Contract {
+  id               Int      @id @default(autoincrement())
+  customerId       Int
+  contractLength   Int
+  startDate        DateTime
+  endDate          DateTime
+  renewalDate      DateTime?
+  terminationDate  DateTime?
+  status           String   @default("active")
+  userId           String
+  createdAt        DateTime @default(now())
   customer      Customer @relation(fields: [customerId], references: [id])
   user          User     @relation(fields: [userId], references: [id])
 }
@@ -262,13 +286,13 @@ model AverageOrderValue {
 }
 
 model ProductUsage {
-  id            Int      @id @default(autoincrement())
-  customerId    Int
-  usageCount    Int      // Number of times the product was used
-  lastUsed      DateTime // Last time the product was used
-  usageDetails  Json     // Additional details about product usage
-  createdAt     DateTime @default(now())
-  userId        String
+  id             Int      @id @default(autoincrement())
+  customerId     Int
+  featureUsed    String
+  usageDuration  Float
+  usageDate      DateTime
+  userId         String
+  createdAt      DateTime @default(now())
   customer      Customer @relation(fields: [customerId], references: [id])
   user          User     @relation(fields: [userId], references: [id])
 }
@@ -286,13 +310,13 @@ model PurchaseFrequency {
 }
 
 model RenewalRate {
-  id            Int      @id @default(autoincrement())
-  customerId    Int
-  numberOfRenewals Int   // Number of times the contract was renewed
-  renewalDates  DateTime[] // Dates of each renewal
-  renewalDetails Json    // Additional details about renewals
-  createdAt     DateTime @default(now())
-  userId        String
+   id                Int      @id @default(autoincrement())
+  customerId        Int
+  renewalRate       Float    // The updated renewal rate
+  lastRenewalUpdate DateTime // Date of the last update
+  userId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
   customer      Customer @relation(fields: [customerId], references: [id])
   user          User     @relation(fields: [userId], references: [id])
 }
@@ -312,13 +336,14 @@ model ReturnRate {
 
 
 model UpsellOpportunity {
-  id            Int      @id @default(autoincrement())
-  customerId    Int
-  potentialRevenue Float // Potential revenue from upsell
-  productSuggested String // Product suggested for upsell
-  opportunityDetails Json // Additional details about upsell opportunity
-  createdAt     DateTime @default(now())
-  userId        String
+  id           String   @id @default(uuid())
+  customerId   Int
+  opportunityId String @unique
+  createdAt    DateTime @default(now())
+  status       String
+  lossReason   String?
+  lossDate     DateTime?
+  userId       String
   customer      Customer @relation(fields: [customerId], references: [id])
   user          User     @relation(fields: [userId], references: [id])
 }

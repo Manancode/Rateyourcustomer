@@ -5,7 +5,8 @@ import { authenticate } from '../middleware/authenticate.js';
 import { createRating, getRatings } from '../controllers/ratingcontroller.js';
 import { createWebhook } from '../controllers/create-webhook.js';
 import { createDefaultRatingCategories, updateRatingCategoryWeightage } from '../controllers/ratingCategoryController.js';
-import { handleWebhookEvent } from '../controllers/webhookEventController.js';
+import { handleWebhookEvent } from '../api/webhook/events/index.js';
+
 
 const router = Router();
 

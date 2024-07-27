@@ -1,5 +1,6 @@
-import prisma from "../../utils/prismaClient.js";
+import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
+
 
 export async function return_rate_updated(payload, userId) {
   const { customerId, returnRate, updateDate } = payload;

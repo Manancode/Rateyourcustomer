@@ -1,4 +1,4 @@
-import prisma from "../../utils/prismaClient.js";
+import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
 export async function customer_engagement_increased(payload, userId) {

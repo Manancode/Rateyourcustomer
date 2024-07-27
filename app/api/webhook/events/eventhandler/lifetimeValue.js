@@ -1,27 +1,34 @@
-import prisma from "../../utils/prismaClient.js";
+import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
-export async function lifetime_value_milestone_reached(payload, userId) {
-  const { customerId, milestone, achievedDate } = payload;
+export async function lifetime_value_calculated(payload, userId) {
+  const { customerId, totalRevenue, startDate, endDate } = payload;
+  
   await prisma.lifetimeValue.create({
     data: {
       customerId,
-      milestone,
-      achievedDate,
-      userId
+      totalRevenue,
+      startDate,
+      endDate,
+      userId,
     },
   });
-  await dispatchEvent('lifetime_value_milestone_reached', payload);
+  
+  await dispatchEvent('lifetime_value_calculated', payload);
 }
 
-export async function predicted_lifetime_value_updated(payload, userId) {
+
+export async function lifetime_value_updated(payload, userId) {
   const { customerId, predictedValue, updatedDate } = payload;
+  
   await prisma.lifetimeValue.update({
     where: { customerId },
     data: {
       predictedValue,
       updatedDate,
+      userId,
     },
   });
-  await dispatchEvent('predicted_lifetime_value_updated', payload);
+  
+  await dispatchEvent('lifetime_value_updated', payload);
 }

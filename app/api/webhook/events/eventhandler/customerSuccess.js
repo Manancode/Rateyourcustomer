@@ -1,5 +1,6 @@
-import prisma from "../../utils/prismaClient.js";
+import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
+
 
 export async function success_milestone_achieved(payload, userId) {
   const { customerId, milestone, achievedDate } = payload;

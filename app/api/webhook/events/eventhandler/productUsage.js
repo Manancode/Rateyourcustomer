@@ -1,18 +1,22 @@
-import prisma from "../../utils/prismaClient.js";
+import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
-export async function product_adoption_score_updated(payload, userId) {
-  const { customerId, newScore, updatedDate } = payload;
-  await prisma.productUsage.update({
-    where: { customerId },
+export async function product_usage_updated(payload, userId) {
+  const { customerId, featureUsed, usageDuration, usageDate } = payload;
+
+  await prisma.productUsage.create({
     data: {
-      adoptionScore: newScore,
-      lastUpdated: updatedDate,
+      customerId,
+      featureUsed,
+      usageDuration,
+      usageDate,
       userId
     },
   });
-  await dispatchEvent('product_adoption_score_updated', payload);
+
+  await dispatchEvent('product_usage_updated', payload);
 }
+
 
 export async function feature_usage_declined(payload, userId) {
   const { customerId, feature, declineDate } = payload;

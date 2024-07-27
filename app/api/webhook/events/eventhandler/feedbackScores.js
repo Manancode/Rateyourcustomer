@@ -1,7 +1,8 @@
-import prisma from "../../utils/prismaClient.js";
+import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
-export async function customer_satisfaction_score_updated(payload, userId) {
+
+export async function feedback_score_updated(payload, userId) {
   const { customerId, satisfactionScore, updatedDate } = payload;
   await prisma.feedbackScores.update({
     where: { customerId },
@@ -10,5 +11,5 @@ export async function customer_satisfaction_score_updated(payload, userId) {
       updatedDate,
     },
   });
-  await dispatchEvent('customer_satisfaction_score_updated', payload);
+  await dispatchEvent('feedback_score_updated', payload);
 }
