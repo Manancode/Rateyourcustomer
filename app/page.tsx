@@ -1,34 +1,48 @@
-
+'use client'
 import { Button } from "@/components/ui/button";
 
-import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { createTheme, MantineProvider } from '@mantine/core'
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
+import { HeroSection } from "@/components/ui/HeroSection";
+import { FaqSimple } from "@/components/ui/faq";
+import CustomerInsight from "@/components/ui/afterherosection";
+import { FooterLinks} from "@/components/ui/footers";
+import { HeaderMegaMenu } from "@/components/ui/header";
+import React from 'react';
+import { FeaturesCards } from "@/components/ui/FeaturesGrid";
+import { PricingPlans } from "@/components/ui/pricing";
 
-export default async function Home() {
-  const {isAuthenticated} = getKindeServerSession()
 
-  if (await isAuthenticated()){
-    return redirect("/dashboard")
-  }
+
+const theme = createTheme({
+  fontFamily: 'Poppins, sans-serif',
+  primaryColor: 'cyan',
+});
+
+
+
+
+
+// eslint-disable-next-line @next/next/no-async-client-component
+export default function Home() {
+  // const {isAuthenticated} = getKindeServerSession()
+
+  // if (await isAuthenticated()){
+  //   return redirect("/dashboard")
+  // }
   return (
- <section className="flex items-center justify-center bg-background h-[90vh]">
-  <div className="relative items-center w-full px-5 py-12 mx-auto lg:px-16 max-w-7xl md:px-12">
-    <div className="max-w-3xl mx-auto text-center">
-      <div>
-          <span className="w-auto px-6 py-3 rounded-full bg-secondary">
-            <span className="text-sm font-medium text-primary">looks dope </span>
-          </span>
-          <h1 className="mt-8 text-3xl font-extrabold tracking-tight lg:text-0xl">
-            whatever the heading i will put 
-          </h1>
-          <p className="max-w-xl mx-auto mt-8 text-base lg:text-xl text-secondary-foreground">description goes here</p>
-      </div>
-      <div className="flex justify-center max-w-sm mx-auto mt-10">
-        <RegisterLink><Button size={"lg"} className="w-full">Get Started for free</Button></RegisterLink>
-      </div>
+    <MantineProvider theme={theme} defaultColorScheme="dark">
+    <div>
+      <HeaderMegaMenu/>
+        <HeroSection/>
+        <CustomerInsight/>
+        <FeaturesCards/>
+        <PricingPlans/>
+        <FaqSimple/>
+        <FooterLinks/>
     </div>
-  </div>
- </section>
+  </MantineProvider>
+
   );
 }

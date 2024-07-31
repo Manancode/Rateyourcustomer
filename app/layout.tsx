@@ -1,34 +1,36 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "./components/theme-provider";
-import Navbar from "./components/navbar";
+// Import styles of packages that you've installed.
+// All packages except `@mantine/hooks` require styles imports
+import '@mantine/core/styles.css';
+import { ColorSchemeScript, MantineProvider, createTheme } from '@mantine/core';
 
-
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "dash",
-  description: "ping if not updated",
+export const metadata = {
+  title: 'RateyourClient',
+  description: 'I have followed setup instructions carefully',
 };
+
+// Create the Mantine theme with your custom font
+const theme = createTheme({
+  fontFamily: 'Poppins, sans-serif', // or your desired font
+  primaryColor: 'cyan',
+});
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body><ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Navbar/>
-            {children}
-          </ThemeProvider></body>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
+        <ColorSchemeScript />
+      </head>
+      <body>
+        <MantineProvider theme={theme}>{children}</MantineProvider>
+      </body>
     </html>
   );
 }
