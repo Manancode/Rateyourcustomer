@@ -49,5 +49,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-// Export the handler function as the default export
+// Export the handler function and WebhookService class
 export default handler;
+export { WebhookService };
