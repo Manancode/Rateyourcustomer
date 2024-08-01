@@ -1,7 +1,7 @@
-/* eslint-disable @next/next/no-page-custom-font */
-// Import styles of packages that you've installed.
-// All packages except `@mantine/hooks` require styles imports
+// Import Mantine styles
 import '@mantine/core/styles.css';
+// Import Tailwind CSS styles
+import './globals.css';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 
 export const metadata = {
