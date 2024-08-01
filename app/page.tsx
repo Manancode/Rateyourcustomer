@@ -7,11 +7,10 @@ import { redirect } from "next/navigation";
 import { HeroSection } from "@/components/ui/HeroSection";
 import { FaqSimple } from "@/components/ui/faq";
 import CustomerInsight from "@/components/ui/afterherosection";
-import { FooterLinks} from "@/components/ui/footers";
+import Footer from "@/components/ui/footers";
 import { HeaderMegaMenu } from "@/components/ui/header";
 import React from 'react';
-import { FeaturesCards } from "@/components/ui/FeaturesGrid";
-import PricingComponent from "@/components/ui/pricing";
+import { FeaturesCards } from "@/components/ui/FeaturesGrid" 
 import PricingPage from "@/components/ui/pricing";
 
 
@@ -41,7 +40,7 @@ export default function Home() {
         <FeaturesCards/>
         <PricingPage/>
         <FaqSimple/>
-        <FooterLinks/>
+        <Footer/>
     </div>
   </MantineProvider>
 

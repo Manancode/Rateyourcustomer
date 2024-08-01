@@ -67,7 +67,7 @@ const Pricing = () => {
           Fair pricing, unfair advantage.
         </p>
         <p className="text-md max-w-xl text-gray-700 md:text-center dark:text-gray-300">
-          Get started with Acme today and take your business to the next level.
+          Get started today and take your business to the next level.
         </p>
       </div>
       <div className="flex items-center justify-center gap-3">

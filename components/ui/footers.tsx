@@ -1,73 +1,107 @@
-import React from 'react';
-import { Text, Container, ActionIcon, Group, rem } from '@mantine/core';
-import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons-react';
-import classes from './FooterSimple.module.css';
+import Image from 'next/image'
 
-const data = [
-  {
-    title: 'About',
-    links: [
-      { label: 'Features', link: '#' },
-      { label: 'Pricing', link: '#' },
-      { label: 'Support', link: '#' },
-      { label: 'Forums', link: '#' },
-    ],
-  },
-];
-
-export function FooterLinks() {
-  const groups = data.map((group) => {
-    const links = group.links.map((link, index) => (
-      <Text<'a'>
-        key={index}
-        className={classes.link}
-        component="a"
-        href={link.link}
-        onClick={(event) => event.preventDefault()}
-      >
-        {link.label}
-      </Text>
-    ));
-
-    return (
-      <div className={classes.wrapper} key={group.title}>
-        <Text className={classes.title}>{group.title}</Text>
-        {links}
-      </div>
-    );
-  });
-
-  return (
-    <footer className={classes.footer}>
-      <Container className={classes.inner}>
-        <div className={classes.logo}>
-          {/* Replace MantineLogo with your custom logo or text */}
-          <Text size="lg">
-            RateYourCustomer
-          </Text>
-          <Text size="xs" c="dimmed" className={classes.description}>
-            Build fully functional accessible web applications faster than ever
-          </Text>
-        </div>
-        <div className={classes.groups}>{groups}</div>
-      </Container>
-      <Container className={classes.afterFooter}>
-        <Text c="dimmed" size="sm">
-          © 2024 RateYourCustomer. All rights reserved.
-        </Text>
-
-        <Group gap={0} className={classes.social} justify="flex-end" wrap="nowrap">
-          <ActionIcon size="lg" color="gray" variant="subtle">
-            <IconBrandTwitter style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon size="lg" color="gray" variant="subtle">
-            <IconBrandYoutube style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon size="lg" color="gray" variant="subtle">
-            <IconBrandInstagram style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
-          </ActionIcon>
-        </Group>
-      </Container>
-    </footer>
-  );
+const navigation = {
+  connect: [
+    { name: 'Book Meeting', href: '' },
+    {
+      name: 'Twitter',
+      href: 'https://twitter.com/justansub',
+    },
+    {
+      name: 'Github',
+      href: 'https://www.youtube.com/@SpeedyBrand-SEO',
+    },
+    {
+      name: 'LinkedIn',
+      href: 'https://www.linkedin.com/company/speedy-brand-inc/',
+    },
+  ],
+  company: [
+    { name: 'Blogs', href: '/' },
+    { name: 'Pricing', href: '/' },
+    { name: 'Affiliate Partner', href: '/' },
+    { name: 'AI For Enterprise', href: '/' },
+  ],
 }
+
+const Footer = () => {
+  return (
+    <footer
+      aria-labelledby="footer-heading"
+      className="font-inter w-full max-w-7xl"
+    >
+      <h2 id="footer-heading" className="sr-only">
+        Footer
+      </h2>
+      <div className="mx-auto max-w-7xl px-2">
+        <div className="flex flex-col justify-between lg:flex-row">
+          <div className="space-y-8">
+            <Image
+              priority={true}
+              unoptimized={true}
+              width={100}
+              height={40}
+              src="/images/syntaxUI.svg"
+              alt="logo"
+              className="h-7 w-auto"
+            />
+            <p className="text-md max-w-xs leading-6 text-gray-700 dark:text-gray-300">
+              Not your average component library - build faster, launch sooner.
+            </p>
+            <div className="flex space-x-6 text-sm text-gray-700  dark:text-gray-300">
+              <div>Made with ❤️ by Manan.</div>
+            </div>
+          </div>
+          {/* Navigations */}
+          <div className="mt-16 grid grid-cols-2 gap-14 md:grid-cols-2 lg:mt-0 xl:col-span-2">
+            <div className="md:mt-0">
+              <h3 className="text-sm font-semibold leading-6 text-gray-900  dark:text-gray-200">
+                Connect
+              </h3>
+              <div className="mt-6 space-y-4">
+                {navigation.connect.map((item) => (
+                  <div key={item.name}>
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm leading-6 text-gray-700 hover:text-gray-900 dark:text-gray-600 hover:dark:text-gray-200"
+                    >
+                      {item.name}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div>
+                <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200">
+                  Company
+                </h3>
+                <div className="mt-6 space-y-4">
+                  {navigation.company.map((item) => (
+                    <div key={item.name}>
+                      <a
+                        href={item.href}
+                        className="text-sm leading-6 text-gray-700 hover:text-gray-900 dark:text-gray-600 hover:dark:text-gray-200"
+                      >
+                        {item.name}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24 dark:border-gray-100/10">
+          <p className="text-xs leading-5 text-gray-700 dark:text-gray-300">
+            &copy; 2024 SyntaxUI. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+export default Footer

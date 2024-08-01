@@ -169,7 +169,7 @@ import {
             <Divider my="sm" />
   
             <a href="#" className={classes.link}>
-              Home
+              FAQ
             </a>
             <UnstyledButton className={classes.link} onClick={toggleLinks}>
               <Center inline>
