@@ -1,3 +1,4 @@
+
 import type { ReactNode } from "react";
 import React, {
   createContext,
@@ -92,6 +93,8 @@ const Confetti = forwardRef<ConfettiRef, Props>((props, ref) => {
     </ConfettiContext.Provider>
   );
 });
+
+Confetti.displayName = 'Confetti';
 
 interface ConfettiButtonProps extends ButtonProps {
   options?: ConfettiOptions &
