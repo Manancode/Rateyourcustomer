@@ -1,7 +1,8 @@
+/* eslint-disable @next/next/no-page-custom-font */
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
 import '@mantine/core/styles.css';
-import { ColorSchemeScript, MantineProvider, createTheme } from '@mantine/core';
+import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 
 export const metadata = {
   title: 'RateyourClient',
@@ -9,10 +10,10 @@ export const metadata = {
 };
 
 // Create the Mantine theme with your custom font
-const theme = createTheme({
+const theme = {
   fontFamily: 'Poppins, sans-serif', // or your desired font
   primaryColor: 'cyan',
-});
+};
 
 export default function RootLayout({
   children,
