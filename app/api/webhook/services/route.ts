@@ -1,54 +1,28 @@
-// Import necessary dependencies
-import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/app/utils/prismaClient';
-import { sendWebhook } from '../utils/sendwebhook';
+import { NextResponse } from 'next/server';
+import { WebhookService } from '../webhookservice';
 
-// WebhookService class definition
-class WebhookService {
-  static async registerWebhook(url: string, events: string[], companyId: string) {
-    return prisma.webhook.create({
-      data: { url, events, companyId }
-    });
-  }
-
-  static async triggerWebhook(companyId: string, event: string, data: any) {
-    await sendWebhook(companyId, event, data);
+export async function POST(request: Request) {
+  try {
+    const { url, events, companyId } = await request.json();
+    
+    const webhook = await WebhookService.registerWebhook(url, events, companyId);
+    
+    return NextResponse.json({ message: 'Webhook registered successfully', webhook });
+  } catch (error) {
+    console.error('Error registering webhook:', error);
+    return NextResponse.json({ error: 'Failed to register webhook' }, { status: 500 });
   }
 }
 
-// Handler function for the API route
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { method } = req;
-
-  switch (method) {
-    case 'POST':
-      // Example usage of registerWebhook (adjust based on your actual requirements)
-      const { url, events, companyId } = req.body;
-      try {
-        const webhook = await WebhookService.registerWebhook(url, events, companyId);
-        res.status(201).json(webhook);
-      } catch (error) {
-        res.status(500).json({ error: 'Failed to register webhook' });
-      }
-      break;
-
-    case 'GET':
-      // Example usage of triggerWebhook (adjust based on your actual requirements)
-      const { companyId: cid, event, data } = req.query;
-      try {
-        await WebhookService.triggerWebhook(cid as string, event as string, data);
-        res.status(200).json({ message: 'Webhook triggered' });
-      } catch (error) {
-        res.status(500).json({ error: 'Failed to trigger webhook' });
-      }
-      break;
-
-    default:
-      res.setHeader('Allow', ['POST', 'GET']);
-      res.status(405).end(`Method ${method} Not Allowed`);
+export async function PUT(request: Request) {
+  try {
+    const { companyId, event, data } = await request.json();
+    
+    await WebhookService.triggerWebhook(companyId, event, data);
+    
+    return NextResponse.json({ message: 'Webhook triggered successfully' });
+  } catch (error) {
+    console.error('Error triggering webhook:', error);
+    return NextResponse.json({ error: 'Failed to trigger webhook' }, { status: 500 });
   }
-};
-
-// Export the handler function and WebhookService class
-export default handler;
-export { WebhookService };
+}
