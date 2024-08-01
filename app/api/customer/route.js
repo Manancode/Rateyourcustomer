@@ -1,10 +1,8 @@
-
 import { NextResponse } from 'next/server';
-import { createCustomers , getCustomers } from '@/app/controllers/customercontroller';
+import { createCustomers, getCustomers } from '@/app/controllers/customercontroller';
 import { authenticate } from '@/app/middleware/authenticate';
-import { WebhookService } from '../webhook/services/route';
+import { WebhookService } from '../webhook/services/route'; // Correct import
 import { WEBHOOK_EVENTS } from '../webhook/constants';
-
 
 async function runMiddleware(req, res, fn) {
   return new Promise((resolve, reject) => {
