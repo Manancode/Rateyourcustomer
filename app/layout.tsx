@@ -5,7 +5,7 @@ import './globals.css';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 
 export const metadata = {
-  title: 'RateyourClient',
+  title: 'Rateyourcustomer',
   description: 'I have followed setup instructions carefully',
 };
 
