@@ -40,7 +40,7 @@ export default function Home() {
         <FeaturesCards/>
         <PricingPage/>
         <FaqSimple/>
-        <Footer/>
+        {/* <Footer/> */}
     </div>
   </MantineProvider>
 

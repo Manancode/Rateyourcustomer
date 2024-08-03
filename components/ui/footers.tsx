@@ -1,19 +1,20 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 const navigation = {
   connect: [
-    { name: 'Book Meeting', href: '' },
+    { name: 'Book Meeting', href: '/' },
     {
       name: 'Twitter',
-      href: 'https://twitter.com/justansub',
+      href: '/',
     },
     {
       name: 'Github',
-      href: 'https://www.youtube.com/@SpeedyBrand-SEO',
+      href: '/',
     },
     {
       name: 'LinkedIn',
-      href: 'https://www.linkedin.com/company/speedy-brand-inc/',
+      href: '/',
     },
   ],
   company: [
@@ -36,7 +37,7 @@ const Footer = () => {
       <div className="mx-auto max-w-7xl px-2">
         <div className="flex flex-col justify-between lg:flex-row">
           <div className="space-y-8">
-            <Image
+            {/* <Image
               priority={true}
               unoptimized={true}
               width={100}
@@ -44,12 +45,15 @@ const Footer = () => {
               src="/images/syntaxUI.svg"
               alt="logo"
               className="h-7 w-auto"
-            />
+            /> */}
+            <Link href={"/"}>
+                    <h1 className='font-bold text-2xl'>Rateyour<span className="text-primary">customer</span></h1>
+                </Link>
             <p className="text-md max-w-xs leading-6 text-gray-700 dark:text-gray-300">
-              Not your average component library - build faster, launch sooner.
+              Not another customer relationship management saas.
             </p>
             <div className="flex space-x-6 text-sm text-gray-700  dark:text-gray-300">
-              <div>Made with ❤️ by Manan.</div>
+              <div>Made with ❤️.</div>
             </div>
           </div>
           {/* Navigations */}
@@ -96,7 +100,7 @@ const Footer = () => {
         </div>
         <div className="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24 dark:border-gray-100/10">
           <p className="text-xs leading-5 text-gray-700 dark:text-gray-300">
-            &copy; 2024 SyntaxUI. All rights reserved.
+            &copy; 2024 Rateyourcustomer. All rights reserved.
           </p>
         </div>
       </div>

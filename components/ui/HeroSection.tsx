@@ -67,18 +67,22 @@ export function HeroSection() {
           </List>
 
           <Group mt={30}>
-            <RegisterLink>
+            {/* <RegisterLink>
               <Button radius="xl" size="md" className={classes.control}>
                 Get started
               </Button>
-            </RegisterLink>
+            </RegisterLink> */}
+             <Button radius="xl" size="md" className={classes.control}>
+                Get started
+              </Button>
             <Button variant="default" radius="xl" size="md" className={classes.control}>
-              Watch Demo
+              Join waitlist
             </Button>
           </Group>
         </div>
         <div className={classes.image}>
           <RatingComponent />
+          
         </div>
       </div>
     </Container>

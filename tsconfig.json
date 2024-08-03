@@ -27,6 +27,6 @@
   ".next/types/**/*.ts",
   "app/**/*.ts",
   "app/**/*.js",
-  "server.js", "components/ui/HeroSection.tsx", "components/ui/pricing.tsx", "components/ui/footers.tsx"] ,
+  "server.js", "components/ui/HeroSection.tsx", "components/ui/pricing.tsx", "components/ui/footers.tsx", "components/ui/waitlist.tsx"] ,
   "exclude": ["node_modules"]
 }

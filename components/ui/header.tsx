@@ -29,6 +29,7 @@ import {
   } from '@tabler/icons-react';
   import classes from './HeaderMegaMenu.module.css';
   import { LoginLink , RegisterLink} from '@kinde-oss/kinde-auth-nextjs';
+import Link from 'next/link';
   const mockdata = [
     {
       icon:IconDatabaseImport,
@@ -89,11 +90,13 @@ import {
       <Box pb={120}>
         <header className={classes.header}>
           <Group justify="space-between" h="100%">
-            <div>logo here</div>
+            <div><Link href={"/"}>
+                    <h1 className='font-bold text-2xl'>Rateyour<span className="text-primary">customer</span></h1>
+                </Link></div>
   
             <Group h="100%" gap={0} visibleFrom="sm">
               <a href="#" className={classes.link}>
-                Home
+                FAQ
               </a>
               <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
                 <HoverCard.Target>
@@ -114,7 +117,7 @@ import {
                   <Group justify="space-between" px="md">
                     <Text fw={500}>Features</Text>
                     <Anchor href="#" fz="xs">
-                      View mor
+                      View more
                     </Anchor>
                   </Group>
   
@@ -148,8 +151,10 @@ import {
             </Group>
   
             <Group visibleFrom="sm">
-              <LoginLink><Button variant="default">Log in</Button></LoginLink>
-              <RegisterLink><Button>Sign up</Button></RegisterLink>
+            <Button variant="default">Log in</Button>
+            <Button>Sign up</Button>
+              {/* <LoginLink><Button variant="default">Log in</Button></LoginLink>
+              <RegisterLink><Button>Sign up</Button></RegisterLink> */}
             </Group>
   
             <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
