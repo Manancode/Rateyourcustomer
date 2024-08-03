@@ -4,6 +4,7 @@ import { IconCheck } from '@tabler/icons-react';
 import { RegisterLink } from '@kinde-oss/kinde-auth-nextjs';
 import classes from './HeroBullets.module.css';
 import { ConfettiButton } from '../magicui/confetti';
+import Link from 'next/link';
 
 const RatingComponent = () => {
   const [rating, setRating] = useState(0);
@@ -73,10 +74,10 @@ export function HeroSection() {
               </Button>
             </RegisterLink> */}
              <Button radius="xl" size="md" className={classes.control}>
-                Get started
+             <Link href='https://commonwaitlist.vercel.app/'>Get started</Link>
               </Button>
             <Button variant="default" radius="xl" size="md" className={classes.control}>
-              Join waitlist
+              <Link href='https://commonwaitlist.vercel.app/'>Join waitlist</Link>
             </Button>
           </Group>
         </div>

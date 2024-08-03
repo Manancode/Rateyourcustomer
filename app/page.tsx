@@ -12,6 +12,7 @@ import { HeaderMegaMenu } from "@/components/ui/header";
 import React from 'react';
 import { FeaturesCards } from "@/components/ui/FeaturesGrid" 
 import PricingPage from "@/components/ui/pricing";
+import ProductFeatures from "@/components/ui/afterfeature";
 
 
 
@@ -38,6 +39,7 @@ export default function Home() {
         <HeroSection/>
         <CustomerInsight/>
         <FeaturesCards/>
+        <ProductFeatures/>
         <PricingPage/>
         <FaqSimple/>
         {/* <Footer/> */}

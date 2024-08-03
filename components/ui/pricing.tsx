@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
 
 const pricingPlans = [
@@ -9,7 +10,7 @@ const pricingPlans = [
     description: 'Start with essential tools to boost your online presence.',
     monthlyPrice: 0,
     annualPrice: 0,
-    link: 'https://github.com/ansub/syntaxUI',
+    link: '/',
     features: [
       'Up to 100 Customers',
       'Basic Analytics',
@@ -23,7 +24,7 @@ const pricingPlans = [
       'Unlock enhanced features and premium content to supercharge your business.',
     monthlyPrice: 19,
     annualPrice: 190,
-    link: 'https://github.com/ansub/syntaxUI',
+    link: '/',
     features: [
       'Up to 1000 Customers',
       'Basic Analytics',
@@ -40,7 +41,7 @@ const pricingPlans = [
       'Ultimate customization and dedicated support for enterprises.',
     monthlyPrice:49,
     annualPrice: 490,
-    link: 'https://github.com/ansub/syntaxUI',
+    link: '/',
     features: [
      'Up to 10000 Customers',
       'Advanced Analytics',
@@ -134,7 +135,7 @@ const Pricing = () => {
               }}
               className="mt-8 w-full rounded-lg bg-red-500 py-2 text-sm font-medium text-white hover:bg-red-500/90"
             >
-              Get Started
+             <Link href='https://commonwaitlist.vercel.app/'>Get started</Link>
             </motion.button>
           </div>
           {plan.features.map((feature, idx) => (

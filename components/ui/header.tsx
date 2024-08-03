@@ -151,8 +151,9 @@ import Link from 'next/link';
             </Group>
   
             <Group visibleFrom="sm">
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+            <Button variant="default"> <Link href='https://commonwaitlist.vercel.app/'>Login</Link></Button>
+            <Button> <Link href='https://commonwaitlist.vercel.app/'>Signup</Link></Button>
+            
               {/* <LoginLink><Button variant="default">Log in</Button></LoginLink>
               <RegisterLink><Button>Sign up</Button></RegisterLink> */}
             </Group>
