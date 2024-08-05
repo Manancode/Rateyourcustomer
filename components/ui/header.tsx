@@ -131,7 +131,7 @@ import Link from 'next/link';
                     <Group justify="space-between">
                       <div>
                         <Text fw={500} fz="sm">
-                          Get started
+                          <RegisterLink>Get started</RegisterLink>
                         </Text>
                         <Text size="xs" c="dimmed">
                         Visit our docs to get started.
@@ -142,7 +142,7 @@ import Link from 'next/link';
                   </div>
                 </HoverCard.Dropdown>
               </HoverCard>
-              <a href="#" className={classes.link}>
+              <a href="/dashboard" className={classes.link}>
                 Pricing
               </a>
               <a href="#" className={classes.link}>
