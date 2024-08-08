@@ -1,4 +1,5 @@
 
+import Navbar from '../components/navbar';
 import LabTabs from '../components/tabs';
 
 
@@ -12,10 +13,10 @@ function Dashboard() {
     ];
 
 return(
-    
+    <><Navbar />
     <div className="main-content">
-    <LabTabs tabs={tabs}/>
-</div>
+        <LabTabs tabs={tabs} />
+    </div></>
 )
 
 }

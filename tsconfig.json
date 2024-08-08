@@ -6,7 +6,7 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
+    "module": "ES2020",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -27,6 +27,6 @@
   ".next/types/**/*.ts",
   "app/**/*.ts",
   "app/**/*.js",
-  "server.js", "components/ui/HeroSection.tsx", "components/ui/pricing.tsx", "components/ui/footers.tsx", "components/ui/waitlist.tsx", "components/ui/testimonial.jsx"] ,
+  "server.js", "components/ui/HeroSection.tsx", "components/ui/pricing.tsx", "components/ui/footers.tsx", "components/ui/waitlist.tsx", "components/ui/testimonial.jsx", "app/dashboard/snippets/dashboard.jsx", "app/dashboard/developer/tabs/apikey.jsx", "app/controllers/apikeyscontroller.js"] ,
   "exclude": ["node_modules"]
 }

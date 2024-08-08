@@ -362,11 +362,5 @@ model Webhook {
   updatedAt  DateTime @updatedAt
 }
 
-// model Waitlist {
-//   id    Int    @id @default(autoincrement())
-//   email String @unique
-//   createdAt DateTime @default(now())
-// }
-
 
 

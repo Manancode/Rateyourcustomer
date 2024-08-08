@@ -6,6 +6,8 @@ import { createRating, getRatings } from '../controllers/ratingcontroller.js';
 import { createWebhook } from '../controllers/create-webhook.js';
 import { createDefaultRatingCategories, updateRatingCategoryWeightage } from '../controllers/ratingCategoryController.js';
 import { handleWebhookEvent } from '../api/webhook/events/index.js';
+import { getApiKeys } from '../controllers/apikeyscontroller.js';
+
 
 
 const router = Router();
@@ -18,5 +20,7 @@ router.post('/create-webhook', authenticate, createWebhook);
 router.post('/rating-categories', authenticate, createDefaultRatingCategories);
 router.put('/rating-categories/weightage', authenticate, updateRatingCategoryWeightage);
 router.post('/webhook-event', authenticate, handleWebhookEvent);
+router.post('/api-keys', getApiKeys)
+
 
 export default router;

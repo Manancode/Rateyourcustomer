@@ -20,7 +20,7 @@ async function getdata({ email, id, firstname, lastname, profileimage }: { email
 
     if (!existingUser) {
       const name = `${firstname ?? ''} ${lastname ?? ''}`;
-      const companyId = uuidv4(); // Generating a random ID for the company
+      const companyId = uuidv4();
 
       user = await prisma.user.create({
         data: {
@@ -53,7 +53,7 @@ async function getdata({ email, id, firstname, lastname, profileimage }: { email
 }
 
 export default async function dashboardlayout({ children }: { children: ReactNode }) {
-  const { getUser } = getKindeServerSession();
+  const { getUser } = getKindeServerSession()
   const user = await getUser();
   if (!user) {
     return redirect("/");

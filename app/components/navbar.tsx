@@ -15,8 +15,8 @@ export default async function Navbar() {
     return (
         <nav className='border-b bg-background h-[10vh] flex items-center'>
             <div className='container flex items-center justify-between'>
-                <Link href={"/"}>
-                    <h1 className='font-bold text-3xl'>Finance<span className="text-primary">kro</span></h1>
+                <Link href={"/dashboard"}>
+                <h1 className='font-bold text-2xl text-primary'>Dashboard</h1>
                 </Link>
                 <div className='flex items-center gap-x-5'>
                     
@@ -26,7 +26,7 @@ export default async function Navbar() {
                             <Link href="/dashboard/developer">
                                 <Button variant='link'>Developer</Button>
                             </Link>
-                            <ThemeToggle />
+                            
                             <Usernav email={user?.email as string} image={user?.picture as string} name={user?.given_name as string} />
                         </>
                     ) : (
