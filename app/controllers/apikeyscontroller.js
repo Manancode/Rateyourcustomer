@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server.js';
 
 export async function getApiKeys(req) {
   try {
-    
+    // had to solve this issue later
     const subscription = await prisma.subscription.findFirst();
 
     if (!subscription) {

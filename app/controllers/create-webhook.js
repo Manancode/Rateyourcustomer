@@ -56,3 +56,31 @@ export async function createWebhook(req, res) {
     return res.status(500).json({ error: 'Failed to register webhook' });
   }
 }
+
+
+export async function getWebhooks(req, res) {
+  try {
+    // Retrieve all webhooks for the company of the authenticated user
+    const webhooks = await prisma.webhook.findMany({
+      where: {
+        companyId: req.user.companyId,
+      },
+      select: {
+        id: true,
+        url: true,
+        events: true,
+        companyId: true,
+      },p
+    });
+
+    // Check if any webhooks are found
+    if (webhooks.length === 0) {
+      return res.status(404).json({ message: 'No webhooks found for this company.' });
+    }
+
+    return res.status(200).json({ webhooks });
+  } catch (error) {
+    console.error('Failed to retrieve webhooks:', error);
+    return res.status(500).json({ error: 'Failed to retrieve webhooks' });
+  }
+}
