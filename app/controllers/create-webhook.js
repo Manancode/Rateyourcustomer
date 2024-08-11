@@ -1,7 +1,7 @@
 import axios from 'axios';
 import prisma from "../utils/prismaClient.js";
 
-// Function to test URL if it really exists
+
 async function testUrl(url) {
   try {
     const response = await axios.get(url, { timeout: 5000 });
@@ -21,7 +21,7 @@ export async function createWebhook(req, res) {
       return res.status(400).json({ error: 'Invalid or unreachable URL' });
     }
 
-    // Check if the webhook already exists
+    
     const webhookexists = await prisma.webhook.findUnique({
       where: { url },
     });
@@ -33,7 +33,7 @@ export async function createWebhook(req, res) {
       return res.status(400).json({ error: 'Webhook URL already exists' });
     }
 
-    // Create webhook entry
+    
     const webhook = await prisma.webhook.create({
       data: {
         url,
@@ -57,30 +57,63 @@ export async function createWebhook(req, res) {
   }
 }
 
-
 export async function getWebhooks(req, res) {
-  try {
-    // Retrieve all webhooks for the company of the authenticated user
+  try { 
+    
+    if (!req.companyId) {
+      return res.status(400).json({ error: 'Company ID is missing' });
+    }
+
     const webhooks = await prisma.webhook.findMany({
-      where: {
-        companyId: req.user.companyId,
+      where: {                                
+        companyId: req.companyId,
       },
-      select: {
+      select : {
         id: true,
         url: true,
         events: true,
         companyId: true,
-      },p
+      }
     });
 
-    // Check if any webhooks are found
     if (webhooks.length === 0) {
       return res.status(404).json({ message: 'No webhooks found for this company.' });
     }
 
     return res.status(200).json({ webhooks });
   } catch (error) {
-    console.error('Failed to retrieve webhooks:', error);
+    console.error('Failed to retrieve webhooks:', error.message);
     return res.status(500).json({ error: 'Failed to retrieve webhooks' });
   }
 }
+
+export async function deleteWebhook(req, res){
+  const { id } = req.params;
+  const { companyId } = req.user;
+  res.companyId
+
+  try {
+    // CheckING  if the webhook exists and belongs to the company
+    const webhook = await prisma.webhook.findFirst({
+      where: {
+        id: id,
+        companyId: companyId
+      }
+    });
+
+    if (!webhook) {
+      return res.status(404).json({ error: 'Webhook not found or does not belong to this company' });
+    }
+
+    // Delete the webhook
+    await prisma.webhook.delete({
+      where: { id: id }
+    });
+
+    res.status(200).json({ message: 'Webhook deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting webhook:', error);
+    res.status(500).json({ error: 'An error occurred while deleting the webhook' });
+  }
+};
+

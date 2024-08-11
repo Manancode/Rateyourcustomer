@@ -4,18 +4,25 @@ import axios from 'axios';
 
 const WebhookManager = () => {
   const [webhooks, setWebhooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newWebhook, setNewWebhook] = useState({ url: '', events: [] });
   const [error, setError] = useState('');
 
   const availableEvents = [
-    'account.updated',
-    'customer.created',
-    'customer.updated',
-    'invoice.paid',
-    'invoice.payment_failed',
-    'payment_intent.succeeded',
-    'payment_intent.payment_failed',
+    'payment_received', 'payment_missed', 'payment_terms_changed',
+    'order_placed', 'order_updated', 'order_cancelled',
+    'lifetime_value_updated', 'lifetime_value_calculated',
+    'product_usage_updated', 'feature_usage_declined',
+    'purchase_frequency_changed', 'renewal_rate_updated',
+    'renewal_risk_identified', 'return_rate_updated',
+    'support_ticket_created', 'support_ticket_resolved',
+    'upsell_opportunity_created', 'upsell_opportunity_lost',
+    'customer_engagement_updated', 'customer_success_updated',
+    'success_milestone_achieved', 'feedback_score_updated',
+    'data_sync_completed', 'contract_created', 'contract_updated',
+    'contract_terminated', 'account_health_updated', 'account_at_risk',
+    'resource_downloaded', 'support_article_viewed'
   ];
 
   useEffect(() => {
@@ -23,15 +30,35 @@ const WebhookManager = () => {
   }, []);
 
   const fetchWebhooks = async () => {
+    setIsLoading(true);
+    setError('');
     try {
-      // This endpoint needs to be implemented on the backend
-      const response = await axios.get('/api/get-webhook');
-      setWebhooks(response.data);
+      const apiKey = localStorage.getItem('apiKey');
+      if (!apiKey) {
+        throw new Error('API key not found. Please log in again.');
+      }
+  
+      const response = await axios.get('/api/get-webhook', {
+        headers: {
+          'x-api-key': apiKey,
+        }
+      });
+  
+      console.log('Fetched webhooks:', response.data);
+  
+      if (response.data && Array.isArray(response.data.webhooks)) {
+        setWebhooks(response.data.webhooks);
+      } else {
+        throw new Error('Unexpected data format received from API.');
+      }
     } catch (error) {
       console.error('Failed to fetch webhooks:', error);
-      setError('Failed to fetch webhooks');
+      setError(error.message || 'Failed to fetch webhooks. Please try again later.');
+    } finally {
+      setIsLoading(false);
     }
   };
+
   const handleAddEndpoint = async (e) => {
     e.preventDefault();
     setError('');
@@ -44,22 +71,35 @@ const WebhookManager = () => {
           'x-api-key': localStorage.getItem('apiKey'),
         }
       });
-      
+
       if (response.status === 201) {
-        setWebhooks([...webhooks, response.data.webhook]);
+        setWebhooks(prevWebhooks => [...prevWebhooks, response.data.webhook]);
         setNewWebhook({ url: '', events: [] });
         setIsModalOpen(false);
       }
     } catch (error) {
       console.error('Failed to add webhook:', error);
-      if (error.response) {
-        setError(error.response.data.error);
-      } else {
-        setError('Failed to register webhook');
-      }
+      setError('Failed to register webhook.');
     }
   };
-  
+
+  const handleDeleteEndpoint = async (webhookId) => {
+    setError('');
+    try {
+      const response = await axios.delete(`/api/delete-webhook/${webhookId}`, {
+        headers: {
+          'x-api-key': localStorage.getItem('apiKey'),
+        }
+      });
+
+      if (response.status === 200) {
+        setWebhooks(prevWebhooks => prevWebhooks.filter(webhook => webhook.id !== webhookId));
+      }
+    } catch (error) {
+      console.error('Failed to delete webhook:', error);
+      setError('Failed to delete webhook url');
+    }
+  };
 
   const toggleEventSelection = (event) => {
     setNewWebhook(prev => ({
@@ -84,22 +124,32 @@ const WebhookManager = () => {
 
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
-      <table className="w-full">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="text-left p-2">URL</th>
-            <th className="text-left p-2">Events</th>
-          </tr>
-        </thead>
-        <tbody>
+      {isLoading ? (
+        <div className="text-center">Loading webhooks...</div>
+      ) : webhooks.length === 0 ? (
+        <div className="text-center">No webhooks available</div>
+      ) : (
+        <div className="space-y-4">
           {webhooks.map((webhook) => (
-            <tr key={webhook.id} className="border-b">
-              <td className="p-2">{webhook.url}</td>
-              <td className="p-2">{webhook.events.join(', ')}</td>
-            </tr>
+            <div key={webhook.id} className="border p-4 rounded flex justify-between items-center">
+              <div>
+                <h3 className="font-bold">{webhook.url}</h3>
+                <p className="text-sm text-gray-600">
+                  Events: {webhook.events.join(', ')}
+                </p>
+              </div>
+              <button
+                onClick={() => handleDeleteEndpoint(webhook.id)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+      )}
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

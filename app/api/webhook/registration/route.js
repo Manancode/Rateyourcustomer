@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { authenticate } from '@/app/middleware/authenticate';
 import { createWebhook, getWebhooks } from '@/app/controllers/create-webhook';
+import { deleteWebhook } from '@/app/controllers/deletewebhookcontroller';
 
 async function runMiddleware(req, res, fn) {
   return new Promise((resolve, reject) => {
@@ -39,5 +40,24 @@ export async function GET(req) {
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Failed to retrieve webhooks' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req) {
+  try {
+    await runMiddleware(req, null, authenticate);
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    if (!id) {
+      return NextResponse.json({ error: 'Webhook ID is required' }, { status: 400 });
+    }
+    const response = await deleteWebhook(req, id);
+    if (response.error) {
+      return NextResponse.json(response, { status: 400 });
+    }
+    return NextResponse.json(response, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: 'Failed to delete webhook' }, { status: 500 });
   }
 }

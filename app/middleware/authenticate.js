@@ -25,7 +25,7 @@ export async function authenticate(req, res, next) {
 
       user = subscription.user;
     } else if (authHeader) {
-    
+      // JWT authentication
       const token = authHeader.split(' ')[1];
       if (!token) {
         return res.status(401).json({ error: 'Invalid authorization header format' });
@@ -45,13 +45,16 @@ export async function authenticate(req, res, next) {
       }
     }
 
-    
     req.user = user;
     req.companyId = user.companyId;
 
+    // Logging for debugging
+    console.log('Authenticated user:', req.user);
+    console.log('Company ID:', req.companyId);
+
     next();
   } catch (error) {
-    console.error('Authentication error:', error);
+    console.error('Authentication error:', error.message);
     return res.status(500).json({ error: 'Internal server error during authentication' });
   }
 }
