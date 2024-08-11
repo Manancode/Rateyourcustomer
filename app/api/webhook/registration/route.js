@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-
 import { authenticate } from '@/app/middleware/authenticate';
 import { createWebhook, getWebhooks } from '@/app/controllers/create-webhook';
-import { deleteWebhook } from '@/app/controllers/deletewebhookcontroller';
 
 async function runMiddleware(req, res, fn) {
   return new Promise((resolve, reject) => {

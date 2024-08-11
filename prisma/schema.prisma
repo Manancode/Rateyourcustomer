@@ -18,54 +18,39 @@ model User {
   Subscription     Subscription[]
   companyId        String
   company          Company              @relation(fields: [companyId], references: [id])
-  ratings          Rating[]
   customers        Customer[]
-  orderValue         OrderValue[]
-  productUsages        ProductUsage[]
-  purchaseFrequencies  PurchaseFrequency[]
-  renewalRates         RenewalRate[]
-  returnRates          ReturnRate[]
-  upsellOpportunities  UpsellOpportunity[]
-  accountHealth        AccountHealth[]
-  contractLength       Contract[]
-  customerEngagement   CustomerEngagement[]
-  feedbackScores       FeedbackScores[]
-  customerSuccess       CustomerSuccess[]
-  lifetimeValue        LifetimeValue[]
-  averageOrderValue    AverageOrderValue[]
-  dataSync             DataSync[]
-  supporTicket         SupportTicket[]
+  dataSyncs        DataSync[]
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
 }
 
-
 model Customer {
-  id               Int                  @id @default(autoincrement())
-  name             String
-  email            String               @unique
-  companyId        String
-  company          Company              @relation(fields: [companyId], references: [id])
-  userId           String
-  user             User                 @relation(fields: [userId], references: [id])
-  ratings          Rating[]
-  paymentHistories PaymentHistory[]
-  orderValue         OrderValue[]
+  id                   Int                  @id @default(autoincrement())
+  name                 String
+  email                String               @unique
+  companyId            String
+  company              Company              @relation(fields: [companyId], references: [id])
+  userId               String
+  user                 User                 @relation(fields: [userId], references: [id])
+  lastEventSent        DateTime?
+  paymentHistories     PaymentHistory[]
+  orderValues          OrderValue[]
   productUsages        ProductUsage[]
   purchaseFrequencies  PurchaseFrequency[]
   renewalRates         RenewalRate[]
   returnRates          ReturnRate[]
   upsellOpportunities  UpsellOpportunity[]
   accountHealth        AccountHealth[]
-  contractLength Contract[]
-  customerEngagement CustomerEngagement[]
-  feedbackScores FeedbackScores[]
-  customerSuccess CustomerSuccess[]
-  lifetimeValue LifetimeValue[]
-  averageOrderValue AverageOrderValue[]
-  supportTicket SupportTicket[]
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
+  contracts            Contract[]
+  customerEngagements  CustomerEngagement[]
+  feedbackScores       FeedbackScores[]
+  customerSuccesses    CustomerSuccess[]
+  lifetimeValues       LifetimeValue[]
+  averageOrderValues   AverageOrderValue[]
+  supportTickets       SupportTicket[]
+  ratings              Rating[]
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
 }
 
 
@@ -91,6 +76,7 @@ model Customer {
     customers Customer[]
     ratingCategory RatingCategory[]
     webhook Webhook[]
+    eventLogs EventLog[]
   }
 
 
@@ -104,7 +90,6 @@ model Rating {
   userid String
   customerId Int
   customer Customer @relation(fields: [customerId], references: [id])
-  user User @relation(fields: [userid], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -151,7 +136,6 @@ model OrderValue {
   updatedAt    DateTime @updatedAt
   userId       String
   customer     Customer @relation(fields: [customerId], references: [id])
-  user         User     @relation(fields: [userId], references: [id])
 }
 
 
@@ -167,7 +151,6 @@ model SupportTicket {
   lastUpdate        DateTime?
   userId            String
   customer Customer @relation(fields: [customerId], references: [id])
-  user User @relation(fields: [userId], references: [id])
 }
 
 
@@ -192,7 +175,6 @@ model AccountHealth {
   createdAt     DateTime @default(now())
   userId        String
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
 
 model Contract {
@@ -207,7 +189,6 @@ model Contract {
   userId           String
   createdAt        DateTime @default(now())
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
 
 model CustomerEngagement {
@@ -219,7 +200,6 @@ model CustomerEngagement {
   createdAt     DateTime @default(now())
   userId        String
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
 
 model CustomerSuccess {
@@ -232,7 +212,6 @@ model CustomerSuccess {
   createdAt     DateTime @default(now())
   userId        String
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
 
 model FeedbackScores {
@@ -245,7 +224,6 @@ model FeedbackScores {
   createdAt     DateTime @default(now())
   userId        String
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
 
 model DataSync {
@@ -269,7 +247,6 @@ model LifetimeValue {
   createdAt     DateTime @default(now())
   userId        String
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
 
 model AverageOrderValue {
@@ -282,7 +259,6 @@ model AverageOrderValue {
   createdAt     DateTime @default(now())
   userId        String
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
 
 model ProductUsage {
@@ -294,7 +270,6 @@ model ProductUsage {
   userId         String
   createdAt      DateTime @default(now())
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
 
 model PurchaseFrequency {
@@ -306,7 +281,6 @@ model PurchaseFrequency {
   createdAt     DateTime @default(now())
   userId        String
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
 
 model RenewalRate {
@@ -318,7 +292,6 @@ model RenewalRate {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
 
 model ReturnRate {
@@ -331,7 +304,7 @@ model ReturnRate {
   createdAt     DateTime @default(now())
   userId        String
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
+
 }
 
 
@@ -345,22 +318,73 @@ model UpsellOpportunity {
   lossDate     DateTime?
   userId       String
   customer      Customer @relation(fields: [customerId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
 }
-
-
-
-
 
 model Webhook {
   id         String   @id @default(uuid())
   url        String @unique
-  events     String[]
+  events     EventType[]
   companyId  String
   company    Company  @relation(fields: [companyId], references: [id])
+  status String @default("active")
+  lastDelivery DateTime?
+  lastError String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  WebhookEvent WebhookEvent[]
 }
 
+model WebhookEvent {
+  id        String   @id @default(uuid())
+  webhookId String
+  webhook   Webhook  @relation(fields: [webhookId], references: [id])
+  eventType String
+  payload   Json
+  status    String   // e.g., "pending", "delivered", "failed"
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
+model EventLog {
+  id        String   @id @default(uuid())
+  eventType String
+  payload   Json
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+enum EventType {
+  PAYMENT_RECEIVED
+  PAYMENT_MISSED
+  PAYMENT_TERMS_CHANGED
+  ORDER_PLACED
+  ORDER_UPDATED
+  ORDER_CANCELLED
+  LIFETIME_VALUE_UPDATED
+  LIFETIME_VALUE_CALCULATED
+  PRODUCT_USAGE_UPDATED
+  FEATURE_USAGE_DECLINED
+  PURCHASE_FREQUENCY_CHANGED
+  RENEWAL_RATE_UPDATED
+  RENEWAL_RISK_IDENTIFIED
+  RETURN_RATE_UPDATED
+  SUPPORT_TICKET_CREATED
+  SUPPORT_TICKET_RESOLVED
+  UPSELL_OPPORTUNITY_CREATED
+  UPSELL_OPPORTUNITY_LOST
+  CUSTOMER_ENGAGEMENT_UPDATED
+  CUSTOMER_SUCCESS_UPDATED
+  SUCCESS_MILESTONE_ACHIEVED
+  FEEDBACK_SCORE_UPDATED
+  DATA_SYNC_COMPLETED
+  CONTRACT_CREATED
+  CONTRACT_UPDATED
+  CONTRACT_TERMINATED
+  ACCOUNT_HEALTH_UPDATED
+  ACCOUNT_AT_RISK
+  RESOURCE_DOWNLOADED
+  SUPPORT_ARTICLE_VIEWED
+}
 
