@@ -121,22 +121,19 @@ model PaymentHistory {
   paymentDates  DateTime[]
   customer Customer @relation(fields: [customerId] , references: [id])
   createdAt     DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model OrderValue {
-  id           Int      @id @default(autoincrement())
-  customerId   Int      @unique
-  orderValue   Float
-  orderDate    DateTime
-  updateDate   DateTime?
-  cancelDate   DateTime?
-  status       String   // e.g., 'placed', 'updated', 'cancelled'
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  customer     Customer @relation(fields: [customerId], references: [id])
+  orderId    String   @id @default(uuid()) // Added orderId as the primary key with UUID
+  customerId Int
+  orderValue Float
+  orderDate  DateTime
+  status     String
+  cancelDate DateTime?
+  createdAt  DateTime  @default(now())
+  customer   Customer  @relation(fields: [customerId], references: [id])
 }
-
-
 
 
 model SupportTicket {
@@ -181,6 +178,7 @@ model Contract {
   endDate          DateTime
   renewalDate      DateTime?
   terminationDate  DateTime?
+  terminationDetails String?
   status           String   @default("active")
   createdAt        DateTime @default(now())
   customer      Customer @relation(fields: [customerId], references: [id])
@@ -220,7 +218,7 @@ model FeedbackScores {
 
 model DataSync {
   id            Int      @id @default(autoincrement())
-  syncType      String   // Type of data sync (e.g., "Manual", "Scheduled")
+  syncType      String?   // Type of data sync (e.g., "Manual", "Scheduled")
   status        String   // Status of the sync (e.g., "Completed", "Failed")
   details       Json     // Details of the sync operation
   syncDate      DateTime @default(now()) // Date when sync occurred
@@ -295,14 +293,15 @@ model ReturnRate {
 
 
 model UpsellOpportunity {
-  id           String   @id @default(uuid())
-  customerId   Int      @unique    
-  opportunityId String @unique
-  createdAt    DateTime @default(now())
-  status       String
-  lossReason   String?
-  lossDate     DateTime?
-  customer      Customer @relation(fields: [customerId], references: [id])
+  id          String   @id @default(uuid())
+  customerId  Int      @unique
+  createdAt   DateTime @default(now())
+  status      String
+  description String?  // Added field for additional details about the upsell opportunity
+  value       Float?   // Added field to capture the value of the upsell opportunity
+  lossReason  String?
+  lossDate    DateTime?
+  customer    Customer @relation(fields: [customerId], references: [id])
 }
 
 model Webhook {

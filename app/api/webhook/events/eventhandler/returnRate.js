@@ -1,7 +1,6 @@
 import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
-
 export async function return_rate_updated(payload, userId) {
   const { customerId, numberOfReturns, totalOrders, returnDates, returnDetails } = payload;
 
@@ -20,8 +19,7 @@ export async function return_rate_updated(payload, userId) {
       numberOfReturns,
       totalOrders,
       returnDates,
-      returnDetails,
-      userId
+      returnDetails
     }
   });
 

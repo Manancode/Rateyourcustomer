@@ -4,36 +4,47 @@ import { dispatchEvent } from "../../utils/eventDispatcher.js";
 export async function product_usage_updated(payload, userId) {
   const { customerId, featureUsed, usageDuration, usageDate } = payload;
 
-  // Update or create a product usage record
   await prisma.productUsage.upsert({
     where: {
-      customerId_usageDate_featureUsed: {
-        customerId,
-        usageDate: new Date(usageDate),
-        featureUsed,
-      }
+      customerId: customerId,
     },
     update: {
+      featureUsed,
       usageDuration,
+      usageDate: new Date(usageDate),
     },
     create: {
       customerId,
       featureUsed,
       usageDuration,
       usageDate: new Date(usageDate),
-      userId,
     },
   });
 
-  // Dispatch the event
   await dispatchEvent('PRODUCT_USAGE_UPDATED', payload);
 }
+
 
 export async function feature_usage_declined(payload, userId) {
   const { customerId, featureUsed, declineReason, declineDate } = payload;
 
-  // Optionally, you could create a separate model for feature usage declines if needed.
-  // Here, we'll just log the decline or update an existing record if applicable.
+  // Fetch the companyId associated with the user's company linked to the customer
+  const customer = await prisma.customer.findUnique({
+    where: { id: customerId },
+    select: {
+      user: {
+        select: {
+          companyId: true,
+        },
+      },
+    },
+  });
+
+  if (!customer || !customer.user) {
+    throw new Error(`Customer with ID ${customerId} or associated user not found`);
+  }
+
+  const { companyId } = customer.user;
 
   await prisma.eventLog.create({
     data: {
@@ -44,10 +55,9 @@ export async function feature_usage_declined(payload, userId) {
         declineReason,
         declineDate,
       },
-      companyId: userId, // Assuming userId is the companyId; adjust as needed
+      companyId, // Automatically fetched companyId
     },
   });
 
-  // Dispatch the event
   await dispatchEvent('FEATURE_USAGE_DECLINED', payload);
 }

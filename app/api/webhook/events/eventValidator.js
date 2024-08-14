@@ -10,26 +10,27 @@ const requiredFields = {
   'PRODUCT_USAGE_UPDATED' : ['customerId' , 'featureUsed' , 'usageDuration' ,'usageDate'],
   'FEATURE_USAGE_DECLINED' : ['customerId', 'featureUsed', 'declineReason', 'declineDate'],
   'PURCHASE_FREQUENCY_CHANGED' : ['customerId', 'numberOfPurchases', 'purchaseDates', 'frequency'],
-  'RENEWAL_RATE_UPDATED' : ['customerId' , 'riskDetails', 'identifiedDate'],
-  'RENEWAL_RISK_IDENTIFIED' : ['customerId', 'renewalRate', 'lastRenewalUpdate'],
+  'RENEWAL_RATE_UPDATED' : ['customerId' ], //'riskDetails', 'identifiedDate'],
+  'RENEWAL_RISK_IDENTIFIED' : ['customerId'], //'renewalRate', 'lastRenewalUpdate' ],
   'RETURN_RATE_UPDATED': ['customerId', 'numberOfReturns', 'totalOrders', 'returnDates', 'returnDetails'],
   'SUPPORT_TICKET_CREATED' : ['customerId', 'ticketId', 'createdAt'],
    'SUPPORT_TICKET_RESOLVED' : ['ticketId', 'resolvedAt', 'satisfactionScore'],
-  'UPSELL_OPPORTUNITY_CREATED' : ['customerId', 'opportunityId', 'status'], 
-  'UPSELL_OPPORTUNITY_LOST': ['opportunityId', 'lossReason', 'lossDate'],
+  'UPSELL_OPPORTUNITY_CREATED' : ['customerId', 'status'],   
+  'UPSELL_OPPORTUNITY_LOST': [ 'lossReason', 'lossDate'],
   'CUSTOMER_ENGAGEMENT_UPDATED': ['customerId', 'engagementScore', 'lastEngaged', 'details'],
    'CUSTOMER_SUCCESS_UPDATED' : ['customerId', 'successScore', 'milestone', 'achievedAt', 'details'], 
   'SUCCESS_MILESTONE_ACHIEVED': ['customerId', 'milestone', 'achievedAt', 'details'],
    'FEEDBACK_SCORE_UPDATED' : ['customerId', 'feedbackScore', 'feedbackDate', 'feedbackType', 'details'],
   'DATA_SYNC_COMPLETED' : ['syncDate', 'details'], 
   'CONTRACT_CREATED' : ['customerId', 'contractLength', 'startDate', 'endDate'], 
-  'CONTRACT_UPDATED' : ['contractId', 'updatedDetails', 'updateDate'],
-  'CONTRACT_TERMINATED' : ['contractId', 'terminationDetails', 'terminationDate'], 
+  'CONTRACT_UPDATED': ['customerId', 'contractLength', 'startDate', 'endDate', 'renewalDate'],
+  'CONTRACT_TERMINATED': ['customerId', 'terminationDetails', 'terminationDate'],
   'ACCOUNT_HEALTH_UPDATED' : ['customerId', 'healthScore', 'updateDate'], 
   'ACCOUNT_AT_RISK': ['customerId', 'riskFactors', 'identifiedDate'],
   'RESOURCE_DOWNLOADED' : ['customerId', 'resourceId', 'downloadDate'], 
-  'SUPPORT_ARTICLE_VIEWED' : ['customerId', 'articleId', 'viewDate']
-  
+  'SUPPORT_ARTICLE_VIEWED' : ['customerId', 'articleId', 'viewDate'] ,
+  'AVERAGE_ORDER_VALUE_UPDATED' : ['customerId'],// 'averageOrderValue', 'updateDate']
+
 };
 
 export function validatePayload(eventType, payload) {

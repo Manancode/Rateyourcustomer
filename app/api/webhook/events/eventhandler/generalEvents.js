@@ -11,19 +11,43 @@ export async function customer_rating_updated(payload, userId) {
       updatedDate,
     },
   });
-  await dispatchEvent('customer_rating_updated', payload);
+  await dispatchEvent('CUSTOMER_RATING_UPDATED', payload);
 }
 
-export async function data_sync_completed(payload, userId) {
-  const { syncDate, details } = payload;
 
+export async function data_sync_completed(payload) {
+  const { customerId, syncDate, details, syncType = "Manual", status = "Completed" } = payload;
+
+  // Fetch the userId from the Customer table using customerId
+  const customer = await prisma.customer.findUnique({
+    where: { id: customerId },
+    select: { userId: true }
+  });
+
+  if (!customer) {
+    throw new Error('Customer not found');
+  }
+
+  const userId = customer.userId;
+
+  // Create a dataSync record
   await prisma.dataSync.create({
     data: {
-      userId,
-      syncDate: new Date(syncDate),
-      details
+      syncType,        // Optional field
+      status,          // Status of the sync
+      details,         // Details of the sync operation
+      syncDate: new Date(syncDate), // Date when sync occurred
+      userId           // Associated userId
     }
   });
 
-  await dispatchEvent('DATA_SYNC_COMPLETED', payload);
+  // Dispatch the event
+  await dispatchEvent('DATA_SYNC_COMPLETED', {
+    eventType: 'DATA_SYNC_COMPLETED',
+    customerId,
+    syncDate,
+    details,
+    syncType,
+    status
+  });
 }

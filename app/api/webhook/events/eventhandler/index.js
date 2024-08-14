@@ -1,3 +1,6 @@
+
+
+
 export { payment_received, payment_missed, payment_terms_changed } from './paymentHistory.js';
 export { order_placed, order_updated, order_cancelled } from './orderValue.js';
 export { lifetime_value_updated, lifetime_value_calculated } from './lifetimeValue.js';
@@ -12,3 +15,6 @@ export { feedback_score_updated } from './feedbackScores.js';
 export { data_sync_completed } from './generalEvents.js';
 export { contract_created, contract_updated, contract_terminated } from './contractLength.js';
 export { account_health_updated, account_at_risk } from './accountHealth.js';
+export { customer_engagement_updated } from './customerEngagement.js'
+export {customer_success_updated ,success_milestone_achieved } from './customerSuccess.js'
+export { resource_downloaded, support_article_viewed } from './resourceinteraction.js';

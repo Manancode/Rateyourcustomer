@@ -12,7 +12,6 @@ export async function lifetime_value_calculated(payload, userId) {
       startDate: new Date(startDate),
       endDate: endDate ? new Date(endDate) : null,
       details,
-      userId,
     },
   });
 
@@ -20,29 +19,26 @@ export async function lifetime_value_calculated(payload, userId) {
   await dispatchEvent('LIFETIME_VALUE_CALCULATED', payload);
 }
 
+
 export async function lifetime_value_updated(payload, userId) {
-  const { customerId, totalRevenue, endDate, details } = payload;
+  const { customerId, totalRevenue, startDate, endDate, details } = payload;
 
   // Update or create a lifetime value record
   await prisma.lifetimeValue.upsert({
     where: {
-      customerId_startDate: {
-        customerId,
-        startDate: new Date(payload.startDate) // Assuming startDate is provided
-      }
+      customerId,
     },
     update: {
       totalRevenue,
-      endDate,
+      endDate: endDate ? new Date(endDate) : null,
       details,
     },
     create: {
       customerId,
       totalRevenue,
-      startDate: new Date(payload.startDate),
-      endDate,
+      startDate: new Date(startDate),
+      endDate: endDate ? new Date(endDate) : null,
       details,
-      userId,
     },
   });
 

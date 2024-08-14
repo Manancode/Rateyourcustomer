@@ -12,7 +12,6 @@ export async function success_milestone_achieved(payload, userId) {
       milestone,
       achievedAt: new Date(achievedAt),
       details,
-      userId
     }
   });
 
