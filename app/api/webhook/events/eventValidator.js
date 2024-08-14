@@ -1,71 +1,45 @@
 const requiredFields = {
-  // Payment History
-  'payment_received': ['paymentId', 'customerId', 'amount', 'paymentDate', 'userId'],
-  'payment_missed': ['paymentId', 'customerId', 'missedDate', 'userId'],
-  'payment_terms_changed': ['customerId', 'oldTerms', 'newTerms', 'changeDate', 'userId'],
-
-  // Order Value
-  'order_placed': ['orderId', 'customerId', 'amount', 'orderDate', 'userId'],
-  'order_updated': ['orderId', 'customerId', 'newAmount', 'updateDate', 'userId'],
-  'order_cancelled': ['orderId', 'customerId', 'cancellationDate', 'userId'],
-
-  // Lifetime Value
-  'lifetime_value_updated': ['customerId', 'totalRevenue', 'updateDate', 'userId'],
-  'lifetime_value_calculated': ['customerId', 'totalRevenue', 'calculationDate', 'userId'],
-
-  // Product Usage
-  'product_usage_updated': ['customerId', 'usageDetails', 'updateDate', 'userId'],
-  'feature_usage_declined': ['customerId', 'featureDetails', 'declineDate', 'userId'],
-
-  // Purchase Frequency
-  'purchase_frequency_changed': ['customerId', 'frequency', 'changeDate', 'userId'],
-
-  // Renewal Rate
-  'renewal_rate_updated': ['customerId', 'renewalRate', 'updateDate', 'userId'],
-  'renewal_risk_identified': ['customerId', 'riskDetails', 'identificationDate', 'userId'],
-
-  // Return Rate
-  'return_rate_updated': ['customerId', 'returnRate', 'updateDate', 'userId'],
-
-  // Support Tickets
-  'support_ticket_created': ['ticketId', 'customerId', 'ticketDetails', 'creationDate', 'userId'],
-  'support_ticket_resolved': ['ticketId', 'customerId', 'resolutionDate', 'userId'],
-
-  // Upsell/Cross-Sell
-  'upsell_opportunity_created': ['opportunityId', 'customerId', 'opportunityDetails', 'creationDate', 'userId'],
-  'upsell_opportunity_lost': ['opportunityId', 'customerId', 'lossDate', 'userId'],
-
-  // Customer Engagement
-  'customer_engagement_updated': ['customerId', 'engagementScore', 'updateDate', 'userId'],
-
-  // Customer Success
-  'customer_success_updated': ['customerId', 'successScore', 'updateDate', 'userId'],
-  'success_milestone_achieved': ['customerId', 'milestoneDetails', 'achievementDate', 'userId'],
-
-  // Feedback Scores
-  'feedback_score_updated': ['customerId', 'feedbackScore', 'feedbackDate', 'feedbackType', 'userId'],
-
-  // Data Sync
-  'data_sync_completed': ['syncDetails', 'syncDate', 'userId'],
-
-  // Contract Length
-  'contract_created': ['customerId', 'contractDetails', 'startDate', 'endDate', 'userId'],
-  'contract_updated': ['customerId', 'contractDetails', 'updateDate', 'userId'],
-  'contract_terminated': ['customerId', 'terminationDate', 'userId'],
-
-  // Account Health
-  'account_health_updated': ['customerId', 'healthScore', 'updateDate', 'userId'],
-  'account_at_risk': ['customerId', 'riskReason', 'updateDate', 'userId'],
-
-  // Additional Events
-  'resource_downloaded': ['resourceId', 'customerId', 'downloadDate', 'userId'],
-  'support_article_viewed': ['articleId', 'customerId', 'viewedDate', 'userId']
-}
-
+  'PAYMENT_RECEIVED': ['customerId', 'amount' , 'paymentDate'],
+  'PAYMENT_MISSED': ['customerId', 'missedDate'],
+  'PAYMENT_TERMS_CHANGED': ['customerId', 'newTerms', 'updatedDate'],
+  'ORDER_PLACED' : ['customerId' , 'orderValue' , 'orderDate' , 'status'], 
+  'ORDER_UPDATED' : ['orderId' , 'updatedFields'],
+  'ORDER_CANCELLED' : ['orderId' , 'cancelDate'],
+  'LIFETIME_VALUE_UPDATED' : ['customerId' ,'totalRevenue' , 'endDate' , 'details'],
+  'LIFETIME_VALUE_CALCULATED' : ['customerId' , 'totalRevenue' , 'startDate' , 'endDate' , 'details'],
+  'PRODUCT_USAGE_UPDATED' : ['customerId' , 'featureUsed' , 'usageDuration' ,'usageDate'],
+  'FEATURE_USAGE_DECLINED' : ['customerId', 'featureUsed', 'declineReason', 'declineDate'],
+  'PURCHASE_FREQUENCY_CHANGED' : ['customerId', 'numberOfPurchases', 'purchaseDates', 'frequency'],
+  'RENEWAL_RATE_UPDATED' : ['customerId' , 'riskDetails', 'identifiedDate'],
+  'RENEWAL_RISK_IDENTIFIED' : ['customerId', 'renewalRate', 'lastRenewalUpdate'],
+  'RETURN_RATE_UPDATED': ['customerId', 'numberOfReturns', 'totalOrders', 'returnDates', 'returnDetails'],
+  'SUPPORT_TICKET_CREATED' : ['customerId', 'ticketId', 'createdAt'],
+   'SUPPORT_TICKET_RESOLVED' : ['ticketId', 'resolvedAt', 'satisfactionScore'],
+  'UPSELL_OPPORTUNITY_CREATED' : ['customerId', 'opportunityId', 'status'], 
+  'UPSELL_OPPORTUNITY_LOST': ['opportunityId', 'lossReason', 'lossDate'],
+  'CUSTOMER_ENGAGEMENT_UPDATED': ['customerId', 'engagementScore', 'lastEngaged', 'details'],
+   'CUSTOMER_SUCCESS_UPDATED' : ['customerId', 'successScore', 'milestone', 'achievedAt', 'details'], 
+  'SUCCESS_MILESTONE_ACHIEVED': ['customerId', 'milestone', 'achievedAt', 'details'],
+   'FEEDBACK_SCORE_UPDATED' : ['customerId', 'feedbackScore', 'feedbackDate', 'feedbackType', 'details'],
+  'DATA_SYNC_COMPLETED' : ['syncDate', 'details'], 
+  'CONTRACT_CREATED' : ['customerId', 'contractLength', 'startDate', 'endDate'], 
+  'CONTRACT_UPDATED' : ['contractId', 'updatedDetails', 'updateDate'],
+  'CONTRACT_TERMINATED' : ['contractId', 'terminationDetails', 'terminationDate'], 
+  'ACCOUNT_HEALTH_UPDATED' : ['customerId', 'healthScore', 'updateDate'], 
+  'ACCOUNT_AT_RISK': ['customerId', 'riskFactors', 'identifiedDate'],
+  'RESOURCE_DOWNLOADED' : ['customerId', 'resourceId', 'downloadDate'], 
+  'SUPPORT_ARTICLE_VIEWED' : ['customerId', 'articleId', 'viewDate']
   
-  export function validatePayload(eventType, payload) {
-    if (!requiredFields[eventType]) {
+};
+
+export function validatePayload(eventType, payload) {
+  const fields = requiredFields[eventType];
+  
+  if (!fields) {
       throw new Error(`Unknown event type: ${eventType}`);
-    }
-    return requiredFields[eventType].filter(field => !payload[field]);
   }
+  
+  const missingFields = fields.filter(field => !(field in payload));
+  
+  return missingFields;
+}

@@ -3,26 +3,37 @@ import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
 
 export async function success_milestone_achieved(payload, userId) {
-  const { customerId, milestone, achievedDate } = payload;
+  const { customerId, milestone, achievedAt, details } = payload;
+
   await prisma.customerSuccess.create({
     data: {
       customerId,
+      successScore: 100, // Or any default score or calculation
       milestone,
-      achievedDate,
-      userId,
-    },
+      achievedAt: new Date(achievedAt),
+      details,
+      userId
+    }
   });
-  await dispatchEvent('success_milestone_achieved', payload);
+
+  await dispatchEvent('SUCCESS_MILESTONE_ACHIEVED', payload);
 }
 
-export async function customer_success_score_updated(payload, userId) {
-  const { customerId, successScore, updatedDate } = payload;
+export async function customer_success_updated(payload, userId) {
+  const { customerId, successScore, milestone, achievedAt, details } = payload;
+
   await prisma.customerSuccess.update({
-    where: { customerId },
+    where: {
+      customerId: customerId
+    },
     data: {
       successScore,
-      updatedDate,
-    },
+      milestone,
+      achievedAt: new Date(achievedAt),
+      details
+    }
   });
-  await dispatchEvent('customer_success_score_updated', payload);
+
+  await dispatchEvent('CUSTOMER_SUCCESS_UPDATED', payload);
 }
+

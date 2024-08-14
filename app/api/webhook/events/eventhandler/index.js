@@ -8,9 +8,7 @@ export { renewal_rate_updated, renewal_risk_identified } from './renewalRate.js'
 export { return_rate_updated } from './returnRate.js';
 export { support_ticket_created, support_ticket_resolved } from './supportTickets.js';
 export { upsell_opportunity_created, upsell_opportunity_lost } from './upsellCrossSell.js';
-export { customer_engagement_score_updated , customer_engagement_increased , customer_engagement_decreased } from './customerEngagement.js';
-export { customer_success_score_updated, success_milestone_achieved } from './customerSuccess.js';
 export { feedback_score_updated } from './feedbackScores.js';
 export { data_sync_completed } from './generalEvents.js';
-export { contract_created, contract_updated, contract_terminated , contract_renewed , contract_up_for_renewal } from './contractLength.js';
+export { contract_created, contract_updated, contract_terminated } from './contractLength.js';
 export { account_health_updated, account_at_risk } from './accountHealth.js';

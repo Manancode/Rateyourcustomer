@@ -3,24 +3,41 @@ import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
 
 export async function account_health_updated(payload, userId) {
-  const { customerId, healthScore } = payload;
+  const { customerId, healthScore, updateDate } = payload;
+
   await prisma.accountHealth.upsert({
-    where: { customerId },
+    where: {
+      customerId_updateDate: {
+        customerId,
+        updateDate: new Date(updateDate),
+      },
+    },
     update: { healthScore },
-    create: { customerId, healthScore, userId },
+    create: {
+      customerId,
+      healthScore,
+      updateDate: new Date(updateDate),
+      userId,
+    },
   });
-  await dispatchEvent('account_health_updated', payload);
+
+  await dispatchEvent('ACCOUNT_HEALTH_UPDATED', payload);
 }
 
 export async function account_at_risk(payload, userId) {
-  const { customerId, riskReason } = payload;
-  await prisma.accountRisk.create({
+  const { customerId, riskFactors, identifiedDate } = payload;
+
+  await prisma.eventLog.create({
     data: {
-      customerId,
-      riskReason,
-      reportedAt: new Date(),
-      userId
+      eventType: 'ACCOUNT_AT_RISK',
+      payload: {
+        customerId,
+        riskFactors,
+        identifiedDate,
+      },
+      companyId: userId,
     },
   });
-  await dispatchEvent('account_at_risk', payload);
+
+  await dispatchEvent('ACCOUNT_AT_RISK', payload);
 }

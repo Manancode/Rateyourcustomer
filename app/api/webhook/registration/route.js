@@ -59,3 +59,4 @@ export async function DELETE(req) {
     return NextResponse.json({ error: 'Failed to delete webhook' }, { status: 500 });
   }
 }
+

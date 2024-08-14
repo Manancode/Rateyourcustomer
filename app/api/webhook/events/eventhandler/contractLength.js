@@ -16,52 +16,31 @@ export async function contract_created(payload, userId) {
   await dispatchEvent('contract_created', payload);
 }
 
-export async function contract_renewed(payload, userId) {
-  const { customerId, newEndDate } = payload;
-  await prisma.contract.update({
-    where: { customerId },
-    data: {
-      endDate: newEndDate,
-    },
-  });
-  await dispatchEvent('contract_renewed', payload);
-}
-
-export async function contract_up_for_renewal(payload, userId) {
-  const { customerId, renewalDate } = payload;
-  await prisma.contract.update({
-    where: { customerId },
-    data: {
-      renewalDate,
-    },
-  });
-  await dispatchEvent('contract_up_for_renewal', payload);
-}
-
-
 export async function contract_updated(payload, userId) {
-  const { contractId, contractLength, startDate, endDate } = payload;
+  const { contractId, updatedDetails, updateDate } = payload;
+
   await prisma.contract.update({
     where: { id: contractId },
     data: {
-      contractLength,
-      startDate,
-      endDate,
-      userId,
+      updatedDetails,
+      updateDate: new Date(updateDate),
     },
   });
-  await dispatchEvent('contract_updated', payload);
+
+  await dispatchEvent('CONTRACT_UPDATED', payload);
 }
 
 export async function contract_terminated(payload, userId) {
-  const { contractId, terminationDate } = payload;
+  const { contractId, terminationDetails, terminationDate } = payload;
+
   await prisma.contract.update({
     where: { id: contractId },
     data: {
-      status: 'terminated',
-      terminationDate,
-      userId,
+      terminationDetails,
+      terminationDate: new Date(terminationDate),
+      status: "TERMINATED",
     },
   });
-  await dispatchEvent('contract_terminated', payload);
+
+  await dispatchEvent('CONTRACT_TERMINATED', payload);
 }

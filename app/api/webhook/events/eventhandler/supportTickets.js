@@ -2,28 +2,32 @@ import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
 export async function support_ticket_created(payload, userId) {
-  const { customerId, ticketId, createdDate } = payload;
+  const { customerId, ticketId, createdAt } = payload;
+
   await prisma.supportTicket.create({
     data: {
       customerId,
       ticketId,
-      createdAt: createdDate,
-      userId,
-    },
+      createdAt: new Date(createdAt),
+      userId
+    }
   });
-  await dispatchEvent('support_ticket_created', payload);
+
+  await dispatchEvent('SUPPORT_TICKET_CREATED', payload);
 }
 
-
-
 export async function support_ticket_resolved(payload, userId) {
-  const { ticketId, resolvedDate } = payload;
+  const { ticketId, resolvedAt, satisfactionScore } = payload;
+
   await prisma.supportTicket.update({
-    where: { id: ticketId },
-    data: {
-      resolvedAt: resolvedDate,
-      userId,
+    where: {
+      ticketId: ticketId
     },
+    data: {
+      resolvedAt: new Date(resolvedAt),
+      satisfactionScore
+    }
   });
-  await dispatchEvent('support_ticket_resolved', payload);
+
+  await dispatchEvent('SUPPORT_TICKET_RESOLVED', payload);
 }

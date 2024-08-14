@@ -16,12 +16,14 @@ export async function customer_rating_updated(payload, userId) {
 
 export async function data_sync_completed(payload, userId) {
   const { syncDate, details } = payload;
+
   await prisma.dataSync.create({
     data: {
       userId,
-      syncDate,
-      details,
-    },
+      syncDate: new Date(syncDate),
+      details
+    }
   });
-  await dispatchEvent('data_sync_completed', payload);
+
+  await dispatchEvent('DATA_SYNC_COMPLETED', payload);
 }

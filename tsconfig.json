@@ -27,6 +27,6 @@
   ".next/types/**/*.ts",
   "app/**/*.ts",
   "app/**/*.js",
-  "server.js", "components/ui/HeroSection.tsx", "components/ui/pricing.tsx", "components/ui/footers.tsx", "components/ui/waitlist.tsx", "components/ui/testimonial.jsx", "app/dashboard/snippets/dashboard.jsx", "app/dashboard/developer/tabs/apikey.jsx", "app/controllers/apikeyscontroller.js", "app/dashboard/developer/tabs/overview.jsx", "app/dashboard/developer/tabs/webhooks.j/sx"] ,
+  "server.js", "components/ui/HeroSection.tsx", "components/ui/pricing.tsx", "components/ui/footers.tsx", "components/ui/waitlist.tsx", "components/ui/testimonial.jsx", "app/dashboard/snippets/dashboard.jsx", "app/dashboard/developer/tabs/apikey.jsx", "app/controllers/apikeyscontroller.js", "app/dashboard/developer/tabs/overview.jsx", "app/dashboard/developer/tabs/webhooks.j/sx", "app/dashboard/developer/tabs/logs.jsx"] ,
   "exclude": ["node_modules"]
 }

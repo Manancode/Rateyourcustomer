@@ -3,33 +3,43 @@ import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
 
 export async function renewal_risk_identified(payload, userId) {
-  const { customerId, riskLevel, identifiedDate } = payload;
-  await prisma.renewalRate.update({
-    where: { customerId },
+  const { customerId, riskDetails, identifiedDate } = payload;
+
+  await prisma.eventLog.create({
     data: {
-      riskLevel,
-      lastRiskAssessment: identifiedDate,
-      userId
-    },
+      eventType: 'RENEWAL_RISK_IDENTIFIED',
+      payload: {
+        customerId,
+        riskDetails,
+        identifiedDate
+      },
+      companyId: userId // Assuming userId is the companyId; adjust as needed
+    }
   });
-  await dispatchEvent('renewal_risk_identified', payload);
+
+  await dispatchEvent('RENEWAL_RISK_IDENTIFIED', payload);
 }
 
 
 
 export async function renewal_rate_updated(payload, userId) {
-  const { customerId, renewalRate, updateDate } = payload;
-  
-  
-  await prisma.renewalRate.update({
-    where: { customerId },
-    data: {
-      renewalRate,
-      lastRenewalUpdate: updateDate,
-      userId
+  const { customerId, renewalRate, lastRenewalUpdate } = payload;
+
+  await prisma.renewalRate.upsert({
+    where: {
+      customerId: customerId
     },
+    update: {
+      renewalRate,
+      lastRenewalUpdate
+    },
+    create: {
+      customerId,
+      renewalRate,
+      lastRenewalUpdate,
+      userId
+    }
   });
 
-  // Dispatch the event after updating the rate
-  await dispatchEvent('renewal_rate_updated', payload);
+  await dispatchEvent('RENEWAL_RATE_UPDATED', payload);
 }

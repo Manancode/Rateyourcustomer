@@ -117,3 +117,35 @@ export async function deleteWebhook(req, res){
   }
 };
 
+export const getEventLogs = async (req, res) => {
+  try {
+    const eventLogs = await prisma.eventLog.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return res.status(200).json({ eventLogs });
+  } catch (error) {
+    console.error('Error fetching event logs:', error);
+    return res.status(500).json({ error: 'Failed to fetch event logs' });
+  }
+};
+
+export const createEventLog = async (req, res) => {
+  const { eventType, payload, companyId } = req.body;
+
+  try {
+    const newLog = await prisma.eventLog.create({
+      data: {
+        eventType,
+        payload,
+        companyId,
+      },
+    });
+
+    return res.status(201).json({ eventLog: newLog });
+  } catch (error) {
+    console.error('Error creating event log:', error);
+    return res.status(500).json({ error: 'Failed to create event log' });
+  }
+};
+

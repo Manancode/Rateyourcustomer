@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -6,23 +6,23 @@ const WebhookManager = () => {
   const [webhooks, setWebhooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newWebhook, setNewWebhook] = useState({ url: '', events: [] });
+  const [newWebhook, setNewWebhook] = useState({ url: '', events: [], status: 'active' });
   const [error, setError] = useState('');
 
   const availableEvents = [
-    'payment_received', 'payment_missed', 'payment_terms_changed',
-    'order_placed', 'order_updated', 'order_cancelled',
-    'lifetime_value_updated', 'lifetime_value_calculated',
-    'product_usage_updated', 'feature_usage_declined',
-    'purchase_frequency_changed', 'renewal_rate_updated',
-    'renewal_risk_identified', 'return_rate_updated',
-    'support_ticket_created', 'support_ticket_resolved',
-    'upsell_opportunity_created', 'upsell_opportunity_lost',
-    'customer_engagement_updated', 'customer_success_updated',
-    'success_milestone_achieved', 'feedback_score_updated',
-    'data_sync_completed', 'contract_created', 'contract_updated',
-    'contract_terminated', 'account_health_updated', 'account_at_risk',
-    'resource_downloaded', 'support_article_viewed'
+    'PAYMENT_RECEIVED', 'PAYMENT_MISSED', 'PAYMENT_TERMS_CHANGED',
+    'ORDER_PLACED', 'ORDER_UPDATED', 'ORDER_CANCELLED',
+    'LIFETIME_VALUE_UPDATED', 'LIFETIME_VALUE_CALCULATED',
+    'PRODUCT_USAGE_UPDATED', 'FEATURE_USAGE_DECLINED',
+    'PURCHASE_FREQUENCY_CHANGED', 'RENEWAL_RATE_UPDATED',
+    'RENEWAL_RISK_IDENTIFIED', 'RETURN_RATE_UPDATED',
+    'SUPPORT_TICKET_CREATED', 'SUPPORT_TICKET_RESOLVED',
+    'UPSELL_OPPORTUNITY_CREATED', 'UPSELL_OPPORTUNITY_LOST',
+    'CUSTOMER_ENGAGEMENT_UPDATED', 'CUSTOMER_SUCCESS_UPDATED',
+    'SUCCESS_MILESTONE_ACHIEVED', 'FEEDBACK_SCORE_UPDATED',
+    'DATA_SYNC_COMPLETED', 'CONTRACT_CREATED', 'CONTRACT_UPDATED',
+    'CONTRACT_TERMINATED', 'ACCOUNT_HEALTH_UPDATED', 'ACCOUNT_AT_RISK',
+    'RESOURCE_DOWNLOADED', 'SUPPORT_ARTICLE_VIEWED'
   ];
 
   useEffect(() => {
@@ -66,6 +66,7 @@ const WebhookManager = () => {
       const response = await axios.post('/api/create-webhook', {
         url: newWebhook.url,
         events: newWebhook.events,
+        status: newWebhook.status
       }, {
         headers: {
           'x-api-key': localStorage.getItem('apiKey'),
@@ -74,7 +75,7 @@ const WebhookManager = () => {
 
       if (response.status === 201) {
         setWebhooks(prevWebhooks => [...prevWebhooks, response.data.webhook]);
-        setNewWebhook({ url: '', events: [] });
+        setNewWebhook({ url: '', events: [], status: 'active' });
         setIsModalOpen(false);
       }
     } catch (error) {
@@ -137,6 +138,19 @@ const WebhookManager = () => {
                 <p className="text-sm text-gray-600">
                   Events: {webhook.events.join(', ')}
                 </p>
+                <p className="text-sm text-gray-600">
+                  Status: {webhook.status}
+                </p>
+                {webhook.lastDelivery && (
+                  <p className="text-sm text-gray-600">
+                    Last Delivery: {new Date(webhook.lastDelivery).toLocaleString()}
+                  </p>
+                )}
+                {webhook.lastError && (
+                  <p className="text-sm text-red-600">
+                    Last Error: {webhook.lastError}
+                  </p>
+                )}
               </div>
               <button
                 onClick={() => handleDeleteEndpoint(webhook.id)}

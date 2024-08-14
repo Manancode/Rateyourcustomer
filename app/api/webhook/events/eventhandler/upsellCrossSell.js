@@ -3,32 +3,35 @@ import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
 
 export async function upsell_opportunity_created(payload, userId) {
-  const { customerId, opportunityId, createdDate } = payload;
+  const { customerId, opportunityId, status } = payload;
+
   await prisma.upsellOpportunity.create({
     data: {
       customerId,
       opportunityId,
-      createdAt: createdDate,
-      status: 'open', // Initial status
+      status,
       userId
-    },
+    }
   });
-  await dispatchEvent('upsell_opportunity_created', payload);
+
+  await dispatchEvent('UPSELL_OPPORTUNITY_CREATED', payload);
 }
 
 
 
-
 export async function upsell_opportunity_lost(payload, userId) {
-  const { customerId, opportunityId, lossReason, lossDate } = payload;
+  const { opportunityId, lossReason, lossDate } = payload;
+
   await prisma.upsellOpportunity.update({
-    where: { id: opportunityId },
+    where: {
+      opportunityId: opportunityId
+    },
     data: {
       status: 'lost',
       lossReason,
-      lossDate,
-      userId
-    },
+      lossDate: new Date(lossDate)
+    }
   });
-  await dispatchEvent('upsell_opportunity_lost', payload);
+
+  await dispatchEvent('UPSELL_OPPORTUNITY_LOST', payload);
 }

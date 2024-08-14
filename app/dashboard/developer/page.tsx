@@ -3,6 +3,7 @@ import LabTabs from '@/app/components/tabs';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ApiKeysPage from '../developer/tabs/apikey';
+import EventLogViewer from '../developer/tabs/logs';
 
 const Overview = dynamic(() => import('../developer/tabs/overview'));
 const Logs = dynamic(() => import('../developer/tabs/logs'));
@@ -17,7 +18,7 @@ export default function Developerpage() {
         { label: 'Api keys', content: <ApiKeysPage/> },
         { label: 'Webhooks', content: <Webhooks/> },
         { label: 'Events', content: <Events/> },
-        { label: 'Logs', content: <Logs/> },
+        { label: 'Logs', content: <EventLogViewer/>},
     ];
 
     return (

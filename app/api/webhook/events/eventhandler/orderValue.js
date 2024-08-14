@@ -2,40 +2,48 @@ import prisma from "../../../../utils/prismaClient.js";
 import { dispatchEvent } from "../../utils/eventDispatcher.js";
 
 export async function order_placed(payload, userId) {
-  const { customerId, orderValue, orderDate } = payload;
+  const { customerId, orderValue, orderDate, status } = payload;
+
+  // Create a new order record
   await prisma.orderValue.create({
     data: {
       customerId,
       orderValue,
       orderDate,
-      status: 'placed',
-      userId
+      status, // E.g., 'placed'
+      userId,
     },
   });
-  await dispatchEvent('order_placed', payload);
+
+  // Dispatch the event
+  await dispatchEvent('ORDER_PLACED', payload);
 }
 
 export async function order_updated(payload, userId) {
-  const { orderId, newOrderValue, updateDate } = payload;
+  const { orderId, updatedFields } = payload;
+
+  // Update the existing order record
   await prisma.orderValue.update({
     where: { id: orderId },
-    data: {
-      orderValue: newOrderValue,
-      updateDate,
-      status: 'updated'
-    },
+    data: updatedFields, // Updated fields should be part of the payload
   });
-  await dispatchEvent('order_updated', payload);
+
+  // Dispatch the event
+  await dispatchEvent('ORDER_UPDATED', payload);
 }
 
 export async function order_cancelled(payload, userId) {
   const { orderId, cancelDate } = payload;
+
+  // Update the existing order record to set its status to 'cancelled'
   await prisma.orderValue.update({
     where: { id: orderId },
     data: {
       status: 'cancelled',
-      cancelDate
+      cancelDate,
     },
   });
-  await dispatchEvent('order_cancelled', payload);
+
+  // Dispatch the event
+  await dispatchEvent('ORDER_CANCELLED', payload);
 }
