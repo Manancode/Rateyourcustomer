@@ -39,7 +39,6 @@ export const average_order_value_updated = async (customerId) => {
 
     const { companyId } = user;
 
-    // Update the rating or any other customer-related data based on the new average order value
     const updatedRating = await prisma.rating.updateMany({
         where: { customerId },
         data: {

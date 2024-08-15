@@ -10,7 +10,7 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   const server = express();
-  const PORT = process.env.PORT || 3001;
+  const PORT = process.env.PORT || 3000;
 
   server.use(bodyParser.json());
 
