@@ -16,25 +16,21 @@ const availableEvents = [
     'SUCCESS_MILESTONE_ACHIEVED', 'FEEDBACK_SCORE_UPDATED',
     'DATA_SYNC_COMPLETED', 'CONTRACT_CREATED', 'CONTRACT_UPDATED',
     'CONTRACT_TERMINATED', 'ACCOUNT_HEALTH_UPDATED', 'ACCOUNT_AT_RISK',
-    'RESOURCE_DOWNLOADED', 'SUPPORT_ARTICLE_VIEWED' , 'AVERAGE_ORDER_VALUE_UPDATED' , 'CUSTOMER_RATING_UPDATED'
+    'RESOURCE_DOWNLOADED', 'SUPPORT_ARTICLE_VIEWED' , 'AVERAGE_ORDER_VALUE_UPDATED' , 'CUSTOMER_RATING_UPDATE'
 ];
 
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-
-    const { eventType, customerId, ...additionalData } = req.body;
-    
-    if (!eventType || !customerId) {
-        return res.status(400).json({ error: 'Missing required fields: eventType, customerId' });
-    }
-
-    if (!availableEvents.includes(eventType)) {
-        return res.status(400).json({ error: `Invalid event type: ${eventType}` });
-    }
-
+export async function POST(request) {
     try {
+        const { eventType, customerId, ...additionalData } = await request.json();
+        
+        if (!eventType || !customerId) {
+            return NextResponse.json({ error: 'Missing required fields: eventType, customerId' }, { status: 400 });
+        }
+
+        if (!availableEvents.includes(eventType)) {
+            return NextResponse.json({ error: `Invalid event type: ${eventType}` }, { status: 400 });
+        }
+
         const payload = {
             eventType,
             customerId,
@@ -49,13 +45,13 @@ export default async function handler(req, res) {
 
         await handleEvent(payload);
 
-        return res.status(200).json({ message: `Event ${eventType} triggered successfully for customer ${customerId}` });
+        return NextResponse.json({ message: `Event ${eventType} triggered successfully for customer ${customerId}` }, { status: 200 });
     } catch (error) {
         console.error(`Error triggering event ${eventType} for customer ${customerId}:`, error);
-        
+
         incrementFailureCounter();
-        await sendSlackAlert(`Failed to handle event ${eventType} for customer ${customerId}. Error: ${error}`);
-        
-        return res.status(500).json({ error: 'Internal Server Error' });
+        await sendSlackAlert(`Failed to handle event ${eventType} for customer ${customerId}. Error: ${error.message}`);
+
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
