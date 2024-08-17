@@ -16,10 +16,10 @@ export async function createWebhook(req, res) {
     const { url, events } = req.body;
 
     // Validate URL
-    const isValidUrl = await testUrl(url);
-    if (!isValidUrl) {
-      return res.status(400).json({ error: 'Invalid or unreachable URL' });
-    }
+    // const isValidUrl = await testUrl(url);
+    // if (!isValidUrl) {
+    //   return res.status(400).json({ error: 'Invalid or unreachable URL' });
+    // }
 
     
     const webhookexists = await prisma.webhook.findUnique({
