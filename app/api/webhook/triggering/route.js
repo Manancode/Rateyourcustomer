@@ -20,11 +20,21 @@ const availableEvents = [
 ];
 
 export async function POST(req, res) {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*'); // You may want to specify your domain here
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // Handle preflight `OPTIONS` request
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end(); // Respond with 200 OK for OPTIONS requests
+    }
+
     let eventType;
     let customerId;
 
     try {
-        const requestData = req.body; // Use req.body instead of request.json()
+        const requestData = req.body; 
         eventType = requestData.eventType;
         customerId = requestData.customerId;
         const additionalData = requestData.additionalData;
