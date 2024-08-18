@@ -1,5 +1,9 @@
 import prisma from '../utils/prismaClient.js';
 import jwt from 'jsonwebtoken';
+import NodeCache from 'node-cache';
+
+// Initialize NodeCache with a TTL of 300 seconds (5 minutes)
+const cache = new NodeCache({ stdTTL: 300 });
 
 export async function authenticate(req, res, next) {
   const apiKey = req.headers['x-api-key'];
@@ -48,13 +52,28 @@ export async function authenticate(req, res, next) {
     req.user = user;
     req.companyId = user.companyId;
 
-    // Logging for debugging
-    console.log('Authenticated user:', req.user);
-    console.log('Company ID:', req.companyId);
-
     next();
   } catch (error) {
     console.error('Authentication error:', error.message);
     return res.status(500).json({ error: 'Internal server error during authentication' });
+  }
+}
+
+// Cache middleware to cache responses
+export function cacheMiddleware(req, res, next) {
+  const key = req.originalUrl;
+  const cachedResponse = cache.get(key);
+
+  if (cachedResponse) {
+    console.log(`Cache hit for ${key}`);
+    return res.send(cachedResponse);
+  } else {
+    res.sendResponse = res.send;
+    res.send = (body) => {
+      cache.set(key, body);
+      res.sendResponse(body);
+    };
+    console.log(`Cache miss for ${key}`);
+    next();
   }
 }

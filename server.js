@@ -1,8 +1,8 @@
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import next from 'next';
 import router from './app/routes/commonroutes.js';
+import cors from 'cors';  // Add this import
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -12,8 +12,14 @@ app.prepare().then(() => {
   const server = express();
   const PORT = process.env.PORT || 3002;
 
-  server.use(bodyParser.json());
+  // Add CORS middleware
+  server.use(cors({
+    origin: 'http://localhost:3000',  // Allow requests from your React app
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'x-api-key']
+  }));
 
+  server.use(bodyParser.json());
 
   server.use('/api', router);
 

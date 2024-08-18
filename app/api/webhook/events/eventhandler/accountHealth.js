@@ -25,7 +25,7 @@ export async function account_health_updated(payload, userId) {
       },
     });
 
-    // Dispatch event after upsert operation
+    
     await dispatchEvent('ACCOUNT_HEALTH_UPDATED', payload);
 
     return accountHealth;
