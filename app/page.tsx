@@ -26,12 +26,12 @@ const theme = createTheme({
 
 
 // eslint-disable-next-line @next/next/no-async-client-component
-export default function Home() {
-  // const {isAuthenticated} = getKindeServerSession()
+export default async function Home() {
+  const {isAuthenticated} = getKindeServerSession()
 
-  // if (await isAuthenticated()){
-  //   return redirect("/dashboard")
-  // }
+  if (await isAuthenticated()){
+    return redirect("/dashboard")
+  }
   return (
     <MantineProvider theme={theme} defaultColorScheme="dark">
     <div>

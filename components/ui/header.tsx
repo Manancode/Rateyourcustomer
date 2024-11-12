@@ -150,12 +150,9 @@ import Link from 'next/link';
               </a>
             </Group>
   
-            <Group visibleFrom="sm">
-            <Button variant="default"> <Link href='https://commonwaitlist.vercel.app/'>Login</Link></Button>
-            <Button> <Link href='https://commonwaitlist.vercel.app/'>Signup</Link></Button>
-            
-              {/* <LoginLink><Button variant="default">Log in</Button></LoginLink>
-              <RegisterLink><Button>Sign up</Button></RegisterLink> */}
+            <Group visibleFrom="sm">            
+              <LoginLink><Button variant="default">Log in</Button></LoginLink>
+              <RegisterLink><Button>Sign up</Button></RegisterLink>
             </Group>
   
             <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
